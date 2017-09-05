@@ -5,6 +5,9 @@ import {http} from '../../http-requests';
 import Header from './../reuse/header';
 import NotEligibleModal from './not-eligible-modal'
 
+import Address from './address'
+import PaymentDetails from './payment-details'
+
 import $ from 'jquery';
 window.jQuery = window.$ = $;
 require('bootstrap');
@@ -49,7 +52,6 @@ class Purchase extends React.Component {
   /**
    * check user has billing details
    */
-
   checkBilling = () => {
     console.log('check billing !!');
 
@@ -64,7 +66,7 @@ class Purchase extends React.Component {
         console.log('stripe');
         console.log('found stripe id');
       })
-    }
+  }
 
   /**
    * get item data from API
@@ -94,6 +96,9 @@ class Purchase extends React.Component {
 
     http.post('handle-order-transaction', {
       itemId: this.state.item._id
+    })
+    .then(res => {
+      console.log('order complete !!');
     })
     .catch(err => {
       console.log('catch ' + err);
@@ -125,24 +130,28 @@ class Purchase extends React.Component {
        <br />
 
        <div className="row">
-         <h4> Delivery Address </h4>
-         <p>United Kingdom</p>
-         <p>Birmingham</p>
-         <p>B18 7DW</p>
-         <p>42 Aberdeen street</p>
+         <Address />
        </div>
+
+       <hr />
+       <div className="row">
+          <PaymentDetails />
+        </div>
+        <hr />
 
        <br />
 
        <div className="row">
          <h2>£ {item.price}</h2>
-         <button className="btn btn-primary" onClick={this.handleOrderTransaction}> Order </button>
+         <button className="btn btn-primary" onClick={this.handleOrderTransaction}>
+           Place Order
+         </button>
        </div>
-
-
      </div>
     )
   }
+
+
 
   /**
    * purchase complete view
@@ -158,9 +167,9 @@ class Purchase extends React.Component {
   render() {
     let jsxView = '';
 
-    if (!this.state.userHasAddress || !this.state.userHasBilling) {
-      $("#NotEligibleModal").modal();
-    }
+    // if (!this.state.userHasAddress || !this.state.userHasBilling) {
+    //   $("#NotEligibleModal").modal();
+    // }
 
     /* only render view if user has address */
     if (this.state.userHasAddress) {
