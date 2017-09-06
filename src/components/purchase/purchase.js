@@ -87,6 +87,15 @@ class Purchase extends React.Component {
     this.setState({orderComplete: true});
   }
 
+
+  /***
+    callbacks
+  ****/
+  paymentDetailsCallback = (paymentDetails) => {
+    console.log('payment details callback () PARENT');
+    console.log(paymentDetails);
+  }
+
   /**
    * send item to the API to handle transaction
    */
@@ -134,9 +143,11 @@ class Purchase extends React.Component {
        </div>
 
        <hr />
+
        <div className="row">
-          <PaymentDetails />
+          <PaymentDetails passPaymentDetailsToParent={this.paymentDetailsCallback} />
         </div>
+
         <hr />
 
        <br />
@@ -151,8 +162,6 @@ class Purchase extends React.Component {
     )
   }
 
-
-
   /**
    * purchase complete view
    */
@@ -166,10 +175,6 @@ class Purchase extends React.Component {
 
   render() {
     let jsxView = '';
-
-    // if (!this.state.userHasAddress || !this.state.userHasBilling) {
-    //   $("#NotEligibleModal").modal();
-    // }
 
     /* only render view if user has address */
     if (this.state.userHasAddress) {

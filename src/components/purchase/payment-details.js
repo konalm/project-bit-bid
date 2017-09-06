@@ -41,16 +41,18 @@ class PurchasePaymentDetails extends React.Component {
     handlers
   ****/
   handleNumberChange = (event) => {
-    let newCard = this.state.newCard;
+    let newCard = Object.assign({}, this.state.newCard);
     newCard.number = event.target.value;
 
     this.setState({
       newCard: newCard
     })
+
+    console.log('changed state');
   }
 
   handleExpMonthChange = (event) => {
-    let newCard = this.state.newCard;
+    let newCard = Object.assign({}, this.state.newCard);
     newCard.expMonth = event.target.value;
 
     this.setState({
@@ -59,7 +61,7 @@ class PurchasePaymentDetails extends React.Component {
   }
 
   handleExpYearChange = (event) => {
-    let newCard = this.state.newCard;
+    let newCard = Object.assign({}, this.state.newCard);
     newCard.expYear = event.target.value;
 
     this.setState({
@@ -68,12 +70,24 @@ class PurchasePaymentDetails extends React.Component {
   }
 
   handleCvcChange = (event) => {
-    let newCard = this.state.newCard;
+    let newCard = Object.assign({}, this.state.newCard);
     newCard.cvc = event.target.value;
 
     this.setState({
       newCard: newCard
     })
+  }
+
+
+  /**
+   * watch state change
+   */
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.newCard !== this.state.newCard) {
+      console.log('new card state changed !!!');
+      this.props.passPaymentDetailsToParent(this.state.newCard);
+    }
+
   }
 
 
