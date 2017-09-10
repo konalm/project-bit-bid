@@ -1,6 +1,12 @@
 import React from 'react';
 
 import {http} from '../../http-requests';
+import {getStripePubKey} from '../../globals';
+
+import $ from 'jquery';
+window.jQuery = window.$ = $;
+
+var Stripe = window.Stripe;
 
 class PurchasePaymentDetails extends React.Component {
   constructor(props) {
@@ -9,7 +15,8 @@ class PurchasePaymentDetails extends React.Component {
     this.state = {
       cardLastFour: '',
       selectNewCard: false,
-      newCard: {}
+      newCard: {},
+      previousCardAvailable: false
     }
 
     this.getUserBilling();
@@ -21,20 +28,20 @@ class PurchasePaymentDetails extends React.Component {
   getUserBilling = () => {
     http.get('user-billing')
       .then(res => {
-        if (res.data.cardLastFour) {
-          this.setState({
-            cardLastFour: res.data.cardLastFour
-          });
-        }
+        if (!res.data.cardLastFour) { return }
+
+        this.setState({cardLastFour: res.data.cardLastFour});
+        this.setState({previousCardAvailable: true});
       })
   }
 
+  /**
+   * use new card for payment (toggles view to allow entry of new card)
+   */
   selectNewCard = (e) => {
     e.preventDefault();
 
-    this.setState({
-      selectNewCard: !this.state.selectNewCard
-    })
+    this.setState({selectNewCard: !this.state.selectNewCard})
   }
 
   /*****
@@ -44,52 +51,75 @@ class PurchasePaymentDetails extends React.Component {
     let newCard = Object.assign({}, this.state.newCard);
     newCard.number = event.target.value;
 
-    this.setState({
-      newCard: newCard
-    })
-
-    console.log('changed state');
+    this.setState({newCard: newCard})
   }
 
   handleExpMonthChange = (event) => {
     let newCard = Object.assign({}, this.state.newCard);
     newCard.expMonth = event.target.value;
 
-    this.setState({
-      newCard: newCard
-    })
+    this.setState({newCard: newCard})
   }
 
   handleExpYearChange = (event) => {
     let newCard = Object.assign({}, this.state.newCard);
     newCard.expYear = event.target.value;
 
-    this.setState({
-      newCard: newCard
-    })
+    this.setState({newCard: newCard})
   }
 
   handleCvcChange = (event) => {
     let newCard = Object.assign({}, this.state.newCard);
     newCard.cvc = event.target.value;
 
-    this.setState({
-      newCard: newCard
-    })
+    this.setState({newCard: newCard})
   }
 
+  /**
+   * create stripe token to send to API
+   */
+  createStripeToken = () => {
+    Stripe.setPublishableKey(getStripePubKey());
+    const form = this.refs.newCardForm;
+
+    return new Promise((resolve, reject) => {
+      Stripe.createToken(form, (status, response) => {
+        if (response.error) { reject(response.error); }
+
+        resolve(response);
+      });
+    });
+  }
 
   /**
-   * watch state change
+   * if using new card for payment ->
+   * generate stripe token with user inputed card details
+   * send stripe token to the API to purchase item and
+   * save stipe customer to user in the API
+   */
+  handlePaymentDetailsOnOrder = async () => {
+    let cardDetails = {}
+
+    if (!this.state.selectNewCard) { return true; }
+
+    try {
+      cardDetails = await this.createStripeToken();
+    } catch (e) {
+      return false;
+    }
+
+    return http.post('user-update-stripe', {userCardDetails: cardDetails});
+  }
+
+  /**
+   * watch state change ->
+   * pass state data of new card to parent when updated
    */
   componentDidUpdate(prevProps, prevState) {
     if (prevState.newCard !== this.state.newCard) {
-      console.log('new card state changed !!!');
       this.props.passPaymentDetailsToParent(this.state.newCard);
     }
-
   }
-
 
   render() {
     const previousCardContainer =
@@ -114,7 +144,7 @@ class PurchasePaymentDetails extends React.Component {
               </div>
 
               <div className="panel-body">
-                <form role="form" onSubmit={this.submitCard} id="cardDetails" ref="testform">
+                <form role="form" id="cardDetails" ref="newCardForm">
                   {/* card number */}
                   <div className="form-group">
                     <label htmlFor="cardNumber">
@@ -200,21 +230,14 @@ class PurchasePaymentDetails extends React.Component {
 
                   <br/>
 
-                {/* feedback response */}
-                {this.state.feedback &&
-                  <div className="input-group">
-                    {this.state.feedback}
-                    <br /> <br />
-                  </div>
-                }
+                  {/* validation response */}
+                  {this.state.validationResponse &&
+                    <div className="input-group">
+                      * {this.state.validationResponse}
+                      <br /> <br />
+                    </div>
+                  }
 
-                  <button
-                    type="submit"
-                    className="btn btn-success btn-lg btn-block"
-                    role="button"
-                  >
-                    Update Card Details
-                  </button>
                 </form>
               </div> {/* panel body */}
             </div> {/* panel default */}
@@ -230,18 +253,20 @@ class PurchasePaymentDetails extends React.Component {
           <div className="row">
             {previousCardContainer}
 
-            <button
-              className="btn btn-primary"
-              onClick={(e) => this.selectNewCard(e)}
-            >
-              {!this.state.selectNewCard &&
-                <span>New Card</span>
-              }
+            {this.state.previousCardAvailable &&
+              <button
+                className="btn btn-primary"
+                onClick={(e) => this.selectNewCard(e)}
+              >
+                {!this.state.selectNewCard &&
+                  <span>New Card</span>
+                }
 
-              {this.state.selectNewCard &&
-                <span>Use Previous Card</span>
-              }
-            </button>
+                {this.state.selectNewCard &&
+                  <span>Use Previous Card</span>
+                }
+              </button>
+            }
           </div>
           <br />
 

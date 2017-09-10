@@ -27,9 +27,14 @@ class Purchase extends React.Component {
     this.itemId = this.props.match.params.item_id;
     this.getItem = this.getItem.bind(this);
     this.purchaseJsx = this.purchaseJsx.bind(this);
-    this.placeOrder = this.placeOrder.bind(this);
+
     this.getItem();
     this.checkUserAddress();
+
+    this.newAddress = false;
+    this.address = {};
+    this.newPaymentDetails = false;
+    this.paymentDetails = {};
   }
 
   /**
@@ -78,38 +83,77 @@ class Purchase extends React.Component {
       })
   }
 
-  /**
-   * place order
-   */
-  placeOrder(e) {
-    console.log('order placed !!');
-    e.preventDefault();
-    this.setState({orderComplete: true});
-  }
-
-
   /***
     callbacks
   ****/
   paymentDetailsCallback = (paymentDetails) => {
+    this.paymentDetails = paymentDetails;
     console.log('payment details callback () PARENT');
     console.log(paymentDetails);
   }
 
+  addressCallback = (address) => {
+    this.address = address;
+    console.log('address');
+  }
+
   /**
-   * send item to the API to handle transaction
+   * handle order transaction
+   * call function in address component to handle address
+   * call function in payment details component to handle payment details
+   * if both address and payment details promises have been resolved then
+   * proceed to place order
    */
   handleOrderTransaction = (e) => {
-    console.log('handle order transaction');
+    console.log('handle order transaction !!');
+
     e.preventDefault();
 
-    http.post('handle-order-transaction', {
-      itemId: this.state.item._id
-    })
-    .then(res => {
-      console.log('order complete !!');
-    })
-    .catch(err => {
+    const handleAddressPromise =
+      Promise.resolve(this.refs.addressComponent.handleAddressOnOrder())
+        .then (res => {
+          if (!res) { return false; }
+
+          return true;
+        })
+        .catch(err => { throw new Error(err); })
+
+    const handlePaymentDetailsPromise =
+      Promise.resolve(
+        this.refs.paymentDetailsComponent.handlePaymentDetailsOnOrder()
+      )
+        .then (res => {
+          console.log('payment res -->');
+          console.log(res);
+
+          if (!res) { return false; }
+
+          return true;
+        })
+        .catch(err => { throw new Error(err) })
+
+    Promise.all([handleAddressPromise, handlePaymentDetailsPromise])
+      .then((responses) => {
+        console.log('responses -->');
+        console.log(responses);
+        if (responses[0] && responses[1]) { this.createOrder(); }
+      })
+      .catch(err => { throw new Error(err) })
+  }
+
+  /**
+   * create the order
+   */
+   createOrder = () => {
+     console.log('create order !!');
+
+     http.post('handle-order-transaction', {
+       itemId: this.state.item._id
+     })
+     .then(res => {
+       console.log('order complete !!');
+     })
+     .catch(err => {
       console.log('catch ' + err);
     })
   }
@@ -138,27 +182,36 @@ class Purchase extends React.Component {
 
        <br />
 
-       <div className="row">
-         <Address />
+      <div className="row">
+        <Address
+          ref="addressComponent"
+          passNewAddressToParent={this.addressCallback}
+        />
        </div>
 
        <hr />
 
        <div className="row">
-          <PaymentDetails passPaymentDetailsToParent={this.paymentDetailsCallback} />
+          <PaymentDetails
+            ref="paymentDetailsComponent"
+            passPaymentDetailsToParent={this.paymentDetailsCallback}
+
+          />
         </div>
 
         <hr />
+        <br />
 
-       <br />
-
-       <div className="row">
-         <h2>£ {item.price}</h2>
-         <button className="btn btn-primary" onClick={this.handleOrderTransaction}>
-           Place Order
-         </button>
-       </div>
-     </div>
+         <div className="row">
+          <h2>£ {item.price}</h2>
+          <button
+            className="btn btn-primary"
+            onClick={this.handleOrderTransaction}
+          >
+            Place Order
+          </button>
+        </div>
+      </div>
     )
   }
 
