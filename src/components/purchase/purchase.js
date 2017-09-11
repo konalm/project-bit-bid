@@ -29,7 +29,7 @@ class Purchase extends React.Component {
     this.purchaseJsx = this.purchaseJsx.bind(this);
     this.placeOrder = this.placeOrder.bind(this);
     this.getItem();
-    this.checkUserAddress();
+    // this.checkUserAddress();
   }
 
   /**

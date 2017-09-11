@@ -22,9 +22,7 @@ class PurchasePaymentDetails extends React.Component {
     http.get('user-billing')
       .then(res => {
         if (res.data.cardLastFour) {
-          this.setState({
-            cardLastFour: res.data.cardLastFour
-          });
+          this.setState({cardLastFour: res.data.cardLastFour});
         }
       })
   }
@@ -32,9 +30,7 @@ class PurchasePaymentDetails extends React.Component {
   selectNewCard = (e) => {
     e.preventDefault();
 
-    this.setState({
-      selectNewCard: !this.state.selectNewCard
-    })
+    this.setState({selectNewCard: !this.state.selectNewCard})
   }
 
   /*****
@@ -44,9 +40,7 @@ class PurchasePaymentDetails extends React.Component {
     let newCard = Object.assign({}, this.state.newCard);
     newCard.number = event.target.value;
 
-    this.setState({
-      newCard: newCard
-    })
+    this.setState({newCard: newCard})
 
     console.log('changed state');
   }
@@ -55,27 +49,21 @@ class PurchasePaymentDetails extends React.Component {
     let newCard = Object.assign({}, this.state.newCard);
     newCard.expMonth = event.target.value;
 
-    this.setState({
-      newCard: newCard
-    })
+    this.setState({newCard: newCard})
   }
 
   handleExpYearChange = (event) => {
     let newCard = Object.assign({}, this.state.newCard);
     newCard.expYear = event.target.value;
 
-    this.setState({
-      newCard: newCard
-    })
+    this.setState({newCard: newCard})
   }
 
   handleCvcChange = (event) => {
     let newCard = Object.assign({}, this.state.newCard);
     newCard.cvc = event.target.value;
 
-    this.setState({
-      newCard: newCard
-    })
+    this.setState({newCard: newCard})
   }
 
 
@@ -89,7 +77,6 @@ class PurchasePaymentDetails extends React.Component {
     }
 
   }
-
 
   render() {
     const previousCardContainer =

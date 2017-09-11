@@ -5,6 +5,7 @@ import {http} from '../../http-requests';
 
 class PurchaseAddress extends React.Component {
   constructor(props) {
+    console.log('construct');
     super(props);
 
     this.state = {
@@ -14,8 +15,14 @@ class PurchaseAddress extends React.Component {
       selectNewAddress: false
     }
 
+    console.log('construct done !!');
+
     this.getPreviousAddress();
   }
+
+  // componentDidMount() {
+  //   console.log('component will mount');
+  // }
 
   /***
     state handlers
@@ -24,62 +31,51 @@ class PurchaseAddress extends React.Component {
     let newAddress = this.state.newAddress;
     newAddress.addressLine = event.target.value;
 
-    this.setState({
-      newAddress: newAddress
-    });
+    this.setState({newAddress: newAddress});
   }
 
   handleAddressLine2Change = (event) => {
     let newAddress = this.state.newAddress;
     newAddress.addressLine2 = event.target.value;
 
-    this.setState({
-      newAddress: newAddress
-    });
+    this.setState({newAddress: newAddress});
   }
 
   handleCountryChange = (event) => {
     let newAddress = this.state.newAddress;
     newAddress.country = event.target.value;
 
-    this.setState({
-      newAddress:  newAddress
-    });
+    this.setState({newAddress:  newAddress});
   }
 
   handleCityChange = (event) => {
     let newAddress = this.state.newAddress;
     newAddress.city = event.target.value;
 
-    this.setState({
-      newAddress: newAddress
-    });
+    this.setState({newAddress: newAddress});
   }
 
   handlePostcodeChange = (event) => {
     let newAddress = this.state.newAddress;
     newAddress.postcode = event.target.value;
 
-    this.setState({
-      newAddress: newAddress
-    });
+    this.setState({newAddress: newAddress});
   }
 
   getPreviousAddress = () => {
-    http.get('user-address')
-      .then(res => {
-        if (res.data.addressLine) {
-          this.setState({
-            previousAddress: res.data,
-          });
-        }
+    console.log('get previous address !!');
 
-        this.setState({checkedAddress: true});
-      })
-      .catch(() => {
-        throw new Error('Issue getting user address from the API');
-        this.setState({checkedAddress: true});
-      })
+    http.get('user-address').then(res => {
+      if (res.data.addressLine) {
+        this.setState({previousAddress: res.data,});
+      }
+
+      this.setState({checkedAddress: true});
+    })
+    .catch(() => {
+      throw new Error('Issue getting user address from the API');
+      this.setState({checkedAddress: true});
+    })
   }
 
   /**
@@ -89,9 +85,7 @@ class PurchaseAddress extends React.Component {
   selectNewAddress = (e) => {
     e.preventDefault();
 
-    this.setState({
-      selectNewAddress: !this.state.selectNewAddress
-    })
+    this.setState({selectNewAddress: !this.state.selectNewAddress})
   }
 
   render() {
