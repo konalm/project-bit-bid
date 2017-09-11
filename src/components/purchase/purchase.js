@@ -105,8 +105,6 @@ class Purchase extends React.Component {
    * proceed to place order
    */
   handleOrderTransaction = (e) => {
-    console.log('handle order transaction !!');
-
     e.preventDefault();
 
     const handleAddressPromise =
@@ -123,9 +121,6 @@ class Purchase extends React.Component {
         this.refs.paymentDetailsComponent.handlePaymentDetailsOnOrder()
       )
         .then (res => {
-          console.log('payment res -->');
-          console.log(res);
-
           if (!res) { return false; }
 
           return true;
@@ -134,8 +129,6 @@ class Purchase extends React.Component {
 
     Promise.all([handleAddressPromise, handlePaymentDetailsPromise])
       .then((responses) => {
-        console.log('responses -->');
-        console.log(responses);
         if (responses[0] && responses[1]) { this.createOrder(); }
       })
       .catch(err => { throw new Error(err) })

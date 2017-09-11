@@ -65,9 +65,7 @@ class PurchaseAddress extends React.Component {
         this.setState({previousAddress: res.data});
         this.setState({previousAddressAvailable: true});
       })
-      .catch(err => {
-        throw new Error(err);
-      })
+      .catch(err => { throw new Error(err); })
   }
 
   /**

@@ -1,6 +1,7 @@
-import React from 'react';
+import React from 'react'
+import Header from '../reuse/header'
 
-import {http} from '../../http-requests';
+import {http} from '../../http-requests'
 
 
 class Order extends React.Component {
@@ -9,7 +10,9 @@ class Order extends React.Component {
 
     this.state = {
       orderNo: this.props.match.params.order_no,
-      orderInfo: {}
+      order: {},
+      item: {},
+      seller: {}
     }
 
     this.getOrder();
@@ -20,36 +23,50 @@ class Order extends React.Component {
    * redirect if order does not belong to user
    */
   getOrder = () => {
-    console.log('get order ()');
-
-    http.get(`order/${this.state.orderNo}`)
+    http.get(`orders/${this.state.orderNo}`)
       .then(res => {
-        console.log('get order -->');
-        console.log(res);
+        this.setState({
+          order: res.data,
+          item: res.data.item,
+          seller: res.data.seller
+        })
       })
+      .catch(err => { throw new Error(err); })
   }
 
   render() {
+    const item = this.state.order.item;
+    const seller = this.state.order.seller;
+    const buyer = this.state.order.buyer;
+
     return (
       <div>
-        <h4>Order Number: </h4>
+        <Header />
+        <div className="container">
+          <h4>Order Number: {this.state.order._id} </h4>
+          <br /> <br />
+          <div>
+            <h4>Item</h4>
+            <p> {this.state.item.title} </p>
+            <p> {this.state.item.description} </p>
+            <p> {this.state.item.condition} </p>
+            <p> item photos </p>
+            <p> <strong>£ {this.state.item.price}</strong> </p>
+          </div>
 
-        <div>
-          <h4>Item</h4>
-          item title
-          item description
-          item photos
-          item cost
-        </div>
+          <br /> <br />
 
-        <div>
-          <h4>Seller</h4>
-          seller name
-          seller rating
-        </div>
+          <div>
+            <h4>Seller</h4>
+            <p>{this.state.seller.username}</p>
+            <p>7.8</p>
+          </div>
 
-        <div>
-          Status: Seller has been alerted to dispatched your item
+          <br /> <br />
+
+          <div>
+            <strong>Status:</strong> Seller has been alerted to dispatched your item
+          </div>
         </div>
       </div>
     )

@@ -48,7 +48,7 @@ const App = () => (
       <Route path="/view-profile/:username" component={viewProfile} />
 
       <Route path="/purchase/:item_id" component={purchaseItem} />
-      <Route path="/order/:order_no" component={order} />
+      <Route path="/orders/:order_no" component={order} />
       <Route path="/login" component={login} />
       <Route path="/register" component={register} />
     </Switch>
