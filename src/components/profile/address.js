@@ -64,9 +64,7 @@ class ProfileAddress extends React.Component {
           postcode: response.data.postcode
         });
       })
-      .catch(err => {
-        console.log(err);
-      })
+      .catch(err => {throw new Error(err)})
   }
 
   /**

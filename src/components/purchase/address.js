@@ -10,9 +10,11 @@ class PurchaseAddress extends React.Component {
 
     this.state = {
       previousAddress: {},
+      previousAddressAvailable: false,
       newAddress: {},
       checkedAddress: false,
-      selectNewAddress: false
+      selectNewAddress: false,
+      validationResponse: '',
     }
 
     console.log('construct done !!');
@@ -28,21 +30,21 @@ class PurchaseAddress extends React.Component {
     state handlers
   ***/
   handleAddressLineChange = (event) => {
-    let newAddress = this.state.newAddress;
+    let newAddress = Object.assign({}, this.state.newAddress);
     newAddress.addressLine = event.target.value;
 
     this.setState({newAddress: newAddress});
   }
 
   handleAddressLine2Change = (event) => {
-    let newAddress = this.state.newAddress;
+    let newAddress = Object.assign({}, this.state.newAddress);
     newAddress.addressLine2 = event.target.value;
 
     this.setState({newAddress: newAddress});
   }
 
   handleCountryChange = (event) => {
-    let newAddress = this.state.newAddress;
+    let newAddress = Object.assign({}, this.state.newAddress);
     newAddress.country = event.target.value;
 
     this.setState({newAddress:  newAddress});
@@ -63,19 +65,14 @@ class PurchaseAddress extends React.Component {
   }
 
   getPreviousAddress = () => {
-    console.log('get previous address !!');
+    http.get('user-address')
+      .then(res => {
+        if (!res.data.addressLine) { return }
 
-    http.get('user-address').then(res => {
-      if (res.data.addressLine) {
-        this.setState({previousAddress: res.data,});
-      }
-
-      this.setState({checkedAddress: true});
-    })
-    .catch(() => {
-      throw new Error('Issue getting user address from the API');
-      this.setState({checkedAddress: true});
-    })
+        this.setState({previousAddress: res.data});
+        this.setState({previousAddressAvailable: true});
+      })
+      .catch(err => { throw new Error(err); })
   }
 
   /**
@@ -88,11 +85,67 @@ class PurchaseAddress extends React.Component {
     this.setState({selectNewAddress: !this.state.selectNewAddress})
   }
 
+  /**
+   * validate new address
+   */
+  newAddressValidation = () => {
+    if (!this.state.newAddress.country) {
+      this.setState({validationResponse: 'You must enter a country'});
+      return false;
+    }
+
+    if (!this.state.newAddress.city) {
+      this.setState({validationResponse: 'You must enter a city'});
+      return false;
+    }
+
+    if (!this.state.newAddress.postcode) {
+      this.setState({validationResponse: 'You must enter a postcode'});
+      return false;
+    }
+
+    if (!this.state.newAddress.addressLine) {
+      this.setState({validationResponse: 'You must enter a addrss line'});
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * update new address
+   */
+  updateAddress = () => {
+    return http.put('user-address', {
+      address: this.state.newAddress
+    })
+  }
+
+  /**
+   * on order proceed with previous address or save new addres if new
+   * address was entered
+   */
+  handleAddressOnOrder = () => {
+    this.setState({validationResponse: ''});
+
+    if (!this.state.selectNewAddress) { return true; }
+
+    if (!this.newAddressValidation()) { return false; }
+
+    return this.updateAddress();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.newAddress !== this.state.newAddress) {
+      this.props.passNewAddressToParent(this.state.newAddress);
+    }
+  }
+
   render() {
     const address = this.state.previousAddress;
 
     const previousAddressContainer =
-      this.state.checkedAddress && Object.keys(address).length !== 0 ?
+      Object.keys(address).length !== 0 ?
         <div className="panel panel-primary previousAddressContainer">
           <div className="panel-body">
             <p>{address.country}</p>
@@ -182,6 +235,13 @@ class PurchaseAddress extends React.Component {
               <br />
             </div>
           </div>
+
+          {/* validation response */}
+          <div className="form-group">
+            <div className="col-lg-10">
+              {this.state.validationResponse}
+            </div>
+          </div>
         </div>
       </div>
       :
@@ -194,18 +254,20 @@ class PurchaseAddress extends React.Component {
         <div className="row">
           {previousAddressContainer}
 
-          <button
-            className="btn btn-primary"
-            onClick={(e) => this.selectNewAddress(e)}
-          >
-            {!this.state.selectNewAddress &&
-              <span>New Address</span>
-            }
+          {this.state.previousAddressAvailable &&
+            <button
+              className="btn btn-primary"
+              onClick={(e) => this.selectNewAddress(e)}
+            >
+              {!this.state.selectNewAddress &&
+                <span>New Address</span>
+              }
 
-            {this.state.selectNewAddress &&
-              <span>Use Previous Address</span>
-            }
-          </button>
+              {this.state.selectNewAddress &&
+                <span>Use Previous Address</span>
+              }
+            </button>
+          }
         </div>
         <br />
 

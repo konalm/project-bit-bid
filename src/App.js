@@ -21,6 +21,8 @@ import listItem from './components/listItem'
 import login from './components/login'
 import register from './components/register'
 import purchaseItem from './components/purchase/purchase'
+import order from './components/order/order'
+
 
 window.jQuery = window.$ = $;
 require('bootstrap');
@@ -46,6 +48,7 @@ const App = () => (
       <Route path="/view-profile/:username" component={viewProfile} />
 
       <Route path="/purchase/:item_id" component={purchaseItem} />
+      <Route path="/orders/:order_no" component={order} />
       <Route path="/login" component={login} />
       <Route path="/register" component={register} />
     </Switch>
