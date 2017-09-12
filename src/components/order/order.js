@@ -49,10 +49,10 @@ class Order extends React.Component {
     if (item.imgCollection) {
       itemImgCollection = item.imgCollection.map(img => {
         return (
-          <div className="col-lg-3" style={{height: "200px"}}>
+          <div className="col-lg-2" style={{height: "auto"}}>
             <img
               src={`${getApiUrl()}render-item-img/${this.state.seller._id}/item/${this.state.item._id}/img-path/${img}`}
-              width="200px"
+              height="150px"
             />
           </div>
         )
@@ -63,33 +63,40 @@ class Order extends React.Component {
     return (
       <div>
         <Header />
+
+
         <div className="container">
-          <h3>Order Number: {this.state.order._id} </h3>
           <br /> <br />
-          <div className="row well">
-            <h4> {this.state.item.title} </h4> <br />
-            <p> {this.state.item.description} </p>
-            <p> {this.state.item.condition} </p>
+          <p className="lead">Order Number: {this.state.order._id} </p>
 
-            <div style={{width: "100%", height: "200px"}}>
-              {itemImgCollection}
+            <div className="well">
+              <p className="lead"> <strong> {this.state.item.title}</strong> </p>
+              <p> {this.state.item.description} </p>
+              <p> {this.state.item.condition} </p>
+              <div className="row">
+                {itemImgCollection}
+              </div>
+
+              <br />
+
+              <p className="lead">
+                <strong>£ {this.state.item.price}</strong>
+              </p>
             </div>
-            <br />
-            <h4> <strong>£ {this.state.item.price}</strong> </h4>
-          </div>
 
           <br /> <br />
 
-          <div className="panel panel-primary px-5">
-            <h4>Seller</h4>
-            <p>{this.state.seller.username}</p>
-            <p>7.8</p>
+          <div className="panel panel-primary p3">
+            <p><strong>Seller:</strong> {this.state.seller.username}</p>
+            <p><strong>Rating:</strong> 7.8</p>
           </div>
 
           <br /> <br />
 
           <div>
-            <strong>Status:</strong> Seller has been alerted to dispatched your item
+            <p>
+              <strong>Status:</strong> Seller has been alerted to dispatched your item
+            </p>
           </div>
         </div>
       </div>
