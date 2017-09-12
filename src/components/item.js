@@ -44,7 +44,6 @@ class Item extends React.Component {
       <div>
         <Header />
         <div className="container">
-
           <h1> {item.title} </h1>
           <br />
           {item.category}

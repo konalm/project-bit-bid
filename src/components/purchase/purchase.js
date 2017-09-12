@@ -29,13 +29,14 @@ class Purchase extends React.Component {
     this.purchaseJsx = this.purchaseJsx.bind(this);
 
     this.getItem();
-    this.checkUserAddress();
 
     this.newAddress = false;
     this.address = {};
     this.newPaymentDetails = false;
     this.paymentDetails = {};
+    this.checkUserAddress();
   }
+
 
   /**
    * check if user has address in DB
@@ -45,10 +46,9 @@ class Purchase extends React.Component {
 
     http.get('user-address')
       .then(res => {
-        if (!res.data.addressLine || !res.data.addressLine2 || !res.data.city ||
+        if (!res.data.addressLine || !res.data.city ||
           !res.data.country || !res.data.postcode)
         {
-          console.log('user does not have address');
           this.setState({userHasAddress: false});
         } else { console.log('user has address'); }
       })
