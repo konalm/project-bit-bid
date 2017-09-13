@@ -5,7 +5,6 @@ import {http} from '../../http-requests';
 
 class PurchaseAddress extends React.Component {
   constructor(props) {
-    console.log('construct');
     super(props);
 
     this.state = {
@@ -17,14 +16,8 @@ class PurchaseAddress extends React.Component {
       validationResponse: '',
     }
 
-    console.log('construct done !!');
-
     this.getPreviousAddress();
   }
-
-  // componentDidMount() {
-  //   console.log('component will mount');
-  // }
 
   /***
     state handlers

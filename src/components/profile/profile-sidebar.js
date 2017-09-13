@@ -24,15 +24,21 @@ class ProfileSidebar extends React.Component {
         <br />
         <ul className="nav nav-pills nav-stacked">
           <li>
-            <Link to="/profile/activity">Activity</Link>
+            <Link to="/profile/activity" activeClassName="active">
+              Activity
+            </Link>
           </li>
 
           <li>
-            <Link to="/profile/messages">Messages</Link>
+            <Link to="/profile/messages" activeClassName="active">
+              Messages
+            </Link>
           </li>
 
           <li>
-            <Link to="/profile/account">Account</Link>
+            <Link to="/profile/account" activeClassName="active">
+              Account
+            </Link>
           </li>
 
           <li>
@@ -44,6 +50,12 @@ class ProfileSidebar extends React.Component {
           <li>
             <Link to="/profile/billing" activeClassName="active">
               Billing
+            </Link>
+          </li>
+
+          <li>
+            <Link to="/profile/orders" activeClassName="active">
+              Orders
             </Link>
           </li>
         </ul>

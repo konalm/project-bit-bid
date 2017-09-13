@@ -15,6 +15,7 @@ import profileAddress from './components/profile/address'
 import profileActivity from './components/profile/activity'
 import profileMessages from './components/profile/messages'
 import profileBilling from './components/profile/billing'
+import profileOrders from './components/profile/orders'
 import viewProfile from './components/profile/viewProfile'
 
 import listItem from './components/listItem'
@@ -45,6 +46,7 @@ const App = () => (
       <Route path="/profile/address" component={profileAddress} />
       <Route path="/profile/account" component={profileAccount} />
       <Route path="/profile/billing" component={profileBilling} />
+      <Route path="/profile/orders" component={profileOrders} />
       <Route path="/view-profile/:username" component={viewProfile} />
 
       <Route path="/purchase/:item_id" component={purchaseItem} />

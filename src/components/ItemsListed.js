@@ -38,20 +38,14 @@ class ItemsListed extends React.Component {
   }
 
   parentSelectCategory(category) {
-    this.setState({
-      'category': category.key
-    });
-
-    return;
+    this.setState({'category': category.key});
   }
 
   componentWillUpdate(nextProps) {
     if (this.state.searchQuery !== nextProps.searchQuery &&
       nextProps.searchQuery !== undefined
     ) {
-      this.setState({
-        'searchQuery': nextProps.searchQuery
-      });
+      this.setState({'searchQuery': nextProps.searchQuery});
     }
   }
 

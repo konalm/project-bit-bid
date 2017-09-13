@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom'
 import axios from 'axios';
 
 import {http} from '../../http-requests';
@@ -21,7 +22,8 @@ class Purchase extends React.Component {
       item: {},
       orderComplete: false,
       userHasAddress: true,
-      userHasBilling: true
+      userHasBilling: true,
+      orderResponse: ''
     }
 
     this.itemId = this.props.match.params.item_id;
@@ -42,15 +44,13 @@ class Purchase extends React.Component {
    * check if user has address in DB
    */
   checkUserAddress = () => {
-    console.log('check user address');
-
     http.get('user-address')
       .then(res => {
         if (!res.data.addressLine || !res.data.city ||
           !res.data.country || !res.data.postcode)
         {
           this.setState({userHasAddress: false});
-        } else { console.log('user has address'); }
+        }
       })
   }
 
@@ -58,18 +58,12 @@ class Purchase extends React.Component {
    * check user has billing details
    */
   checkBilling = () => {
-    console.log('check billing !!');
-
     http.get('user-billing')
       .then(res => {
         if (!res.data.stripeId) {
-          console.log('No stripe id');
           this.setState({userHasBilling: false});
           return;
         }
-
-        console.log('stripe');
-        console.log('found stripe id');
       })
   }
 
@@ -88,13 +82,10 @@ class Purchase extends React.Component {
   ****/
   paymentDetailsCallback = (paymentDetails) => {
     this.paymentDetails = paymentDetails;
-    console.log('payment details callback () PARENT');
-    console.log(paymentDetails);
   }
 
   addressCallback = (address) => {
     this.address = address;
-    console.log('address');
   }
 
   /**
@@ -106,6 +97,8 @@ class Purchase extends React.Component {
    */
   handleOrderTransaction = (e) => {
     e.preventDefault();
+
+    this.setState({orderResponse: ''});
 
     const handleAddressPromise =
       Promise.resolve(this.refs.addressComponent.handleAddressOnOrder())
@@ -145,9 +138,19 @@ class Purchase extends React.Component {
      })
      .then(res => {
        console.log('order complete !!');
+       console.log(res);
+
+      /* redirect to order/orderId */
+      this.props.history.push(`/orders/${res.data.data._id}`);
      })
      .catch(err => {
-      console.log('catch ' + err);
+       if (err.response.status === 403) {
+        console.log('already purchased');
+        this.setState({orderResponse: 'Sorry, this item has already been sold'});
+        return;
+      }
+
+      throw new Error(err);
     })
   }
 
@@ -203,6 +206,9 @@ class Purchase extends React.Component {
           >
             Place Order
           </button>
+          <br /> <br />
+
+          {this.state.orderResponse}
         </div>
       </div>
     )
@@ -242,4 +248,4 @@ class Purchase extends React.Component {
   }
 }
 
-export default Purchase;
+export default withRouter(Purchase);
