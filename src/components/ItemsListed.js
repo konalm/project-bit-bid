@@ -74,7 +74,6 @@ class ItemsListed extends React.Component {
     const items = Object.keys(this.state.items).map(function(key, index) {
       const item = this.state.items[key];
 
-
       const imgCollection = item.imgCollection.map(img => {
         return (
           <div className="col-lg-3">
@@ -85,6 +84,9 @@ class ItemsListed extends React.Component {
           </div>
         )
       });
+
+      console.log('ITEMS !!!!');
+      console.log(items);
 
       item.delivery = item.deliveryMethod === 1 ? 'royal mail' : 'free';
 
@@ -172,5 +174,6 @@ const mapStateToProps = (state) => ({
 });
 
 ItemsListed = connect(mapStateToProps)(ItemsListed);
+
 
 export default ItemsListed;

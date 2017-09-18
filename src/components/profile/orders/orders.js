@@ -1,23 +1,15 @@
-import React from 'react';
+import React from 'react'
+import {http} from '../../../http-requests'
 
-import Header from '../reuse/header'
-import ProfileSidebar from './profile-sidebar'
+import Header from '../../reuse/header'
+import ProfileSidebar from '../profile-sidebar'
 
-class ProfileOrders extends React.Component {
+class orders extends React.Component {
   constructor() {
     super();
-
   }
 
-
-  ordersJsx () {
-    // const orders =
-
-  }
-
-  render () {
-
-
+  render() {
     return (
       <div>
         <Header />
@@ -35,12 +27,6 @@ class ProfileOrders extends React.Component {
               <h3>Orders</h3>
 
               <br /> <br />
-
-              <div className="container">
-                <div className="row">
-
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -49,4 +35,4 @@ class ProfileOrders extends React.Component {
   }
 }
 
-export default ProfileOrders;
+export default orders;

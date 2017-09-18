@@ -15,7 +15,7 @@ import profileAddress from './components/profile/address'
 import profileActivity from './components/profile/activity'
 import profileMessages from './components/profile/messages'
 import profileBilling from './components/profile/billing'
-import profileOrders from './components/profile/orders'
+import profileOrders from './components/profile/orders/orders'
 import viewProfile from './components/profile/viewProfile'
 
 import listItem from './components/listItem'
@@ -24,6 +24,7 @@ import register from './components/register'
 import purchaseItem from './components/purchase/purchase'
 import order from './components/order/order'
 
+import testC from './components/items'
 
 window.jQuery = window.$ = $;
 require('bootstrap');
@@ -53,6 +54,8 @@ const App = () => (
       <Route path="/orders/:order_no" component={order} />
       <Route path="/login" component={login} />
       <Route path="/register" component={register} />
+
+      <Route path="/test" component={testC} />
     </Switch>
     </div>
   </Router>

@@ -60,7 +60,7 @@ class Sidebar extends React.Component {
       currentCategory: 'default',
     }
 
-    this.parentSelectCategory = this.props.parentSelectCategory.bind(this);
+    // this.parentSelectCategory = this.props.parentSelectCategory.bind(this);
   }
 
   selectCategory(e, category) {
