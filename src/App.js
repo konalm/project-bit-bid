@@ -15,7 +15,8 @@ import profileAddress from './components/profile/address'
 import profileActivity from './components/profile/activity'
 import profileMessages from './components/profile/messages'
 import profileBilling from './components/profile/billing'
-import profileOrders from './components/profile/orders/orders'
+import profileOrders from './components/profile/orders'
+import profileSales from './components/profile/sales'
 import viewProfile from './components/profile/viewProfile'
 
 import listItem from './components/listItem'
@@ -23,6 +24,7 @@ import login from './components/login'
 import register from './components/register'
 import purchaseItem from './components/purchase/purchase'
 import order from './components/order/order'
+import sale from './components/sale'
 
 import testC from './components/items'
 
@@ -48,10 +50,13 @@ const App = () => (
       <Route path="/profile/account" component={profileAccount} />
       <Route path="/profile/billing" component={profileBilling} />
       <Route path="/profile/orders" component={profileOrders} />
+      <Route path="/profile/sales" component={profileSales} />
       <Route path="/view-profile/:username" component={viewProfile} />
 
       <Route path="/purchase/:item_id" component={purchaseItem} />
       <Route path="/orders/:order_no" component={order} />
+      <Route path="/sales/:sale_no" component={sale} />
+      
       <Route path="/login" component={login} />
       <Route path="/register" component={register} />
 

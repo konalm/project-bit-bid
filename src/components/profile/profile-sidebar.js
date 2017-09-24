@@ -58,6 +58,12 @@ class ProfileSidebar extends React.Component {
               Orders
             </Link>
           </li>
+
+          <li>
+            <Link to="/profile/sales" activeClassName="active">
+              Sales
+            </Link>
+          </li>
         </ul>
       </div>
     )

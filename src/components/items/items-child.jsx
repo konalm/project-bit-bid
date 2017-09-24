@@ -18,7 +18,7 @@ const ImgCollection = ({item}) => {
                 width="200px"
               />
             </div>
-      )})}
+  )})}
     </div>
 )}
 

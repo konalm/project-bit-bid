@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@sendgrid/mail": "^6.1.4",
     "boostrap": "^1.0.0",
     "bootstrap": "^3.3.7",
     "form-data": "^2.2.0",
     "jquery": "^3.2.1",
     "js-cookie": "^2.1.4",
+    "moment": "^2.18.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.5",

@@ -85,11 +85,7 @@ class ItemsListed extends React.Component {
         )
       });
 
-      console.log('ITEMS !!!!');
-      console.log(items);
-
       item.delivery = item.deliveryMethod === 1 ? 'royal mail' : 'free';
-
       const sellerUsername = item.user ? item.user.username : '';
 
       return (
@@ -110,26 +106,22 @@ class ItemsListed extends React.Component {
             <strong>Price:</strong> {item.price}
             <br />
 
-            <strong>Seller:
+            <strong>
+              Seller:
               <Link to={`/view-profile/${sellerUsername}`}>
                 {sellerUsername}
               </Link>
             </strong>
 
-            <br /> <br />
-
-            <div className="row">
+            <div className="row mt2">
               {imgCollection}
             </div>
 
-            <br /> <br />
-            <Link to={'/items/' + item._id}>
+            <Link to={'/items/' + item._id} className="mr2 mt2">
               <button className="btn btn-primary">
                 View
               </button>
             </Link>
-
-            &nbsp; &nbsp;
 
             <Link to={`/purchase/${item._id}`}>
               <button className="btn btn-primary">
