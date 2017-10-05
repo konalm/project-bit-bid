@@ -36,10 +36,13 @@ class Login extends React.Component {
       password: this.state.password
     })
       .then(res => {
-        cookies.set('bit_bid_key', res.data.token);
-
-        console.log('res ->')
+        console.log('res --->');
         console.log(res);
+
+        console.log('token -->');
+        console.log(res.data.token);
+
+        cookies.set('bit_bid_key', res.data.token);
       })
 
     console.log('login !!');

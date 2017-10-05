@@ -26,6 +26,35 @@ class ProfileBilling extends React.Component {
     };
 
     this.getUserBilling();
+
+    // Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
+
+    Stripe.setPublishableKey('pk_test_rfNwWQrKTzQnIBcNZf2tM7AZ');
+
+
+    // Stripe.createToken({
+    //   number: 4000056655665556,
+    //   cvc: 123,
+    //   exp_month: 10,
+    //   exp_year: 20,
+    //   currency: 'usd'
+    // }, (status, response) => {
+    //   console.log('token response ---->');
+    //   console.log(response);
+    // })
+
+    // return;
+    //
+    // Stripe.bankAccount.createToken({
+    //   country: 'GB',
+    //   currency: 'GBP',
+    //   account_number: 121034,
+    //   account_holder_name: 'connor moore',
+    //   account_holder_type: 'individual'
+    // }, (status, response) => {
+    //   console.log('bank account token res ----->');
+    //   console.log(response);
+    // });
   }
 
   /**
@@ -35,13 +64,19 @@ class ProfileBilling extends React.Component {
     e.preventDefault();
 
     Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
+
+    // Stripe.setPublishableKey('pk_test_rfNwWQrKTzQnIBcNZf2tM7AZ');
     let form = this.refs.testform;
 
     Stripe.createToken(form, (status, response) => {
+      console.log('stripejs response --->');
+      console.log(response);
+
       if (response.error) {
         this.setState({feedback: response.error.message});
         return;
       }
+
 
       http.post('user-update-stripe', {userCardDetails: response})
         .then(response => {

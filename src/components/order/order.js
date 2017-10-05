@@ -19,7 +19,6 @@ class Order extends React.Component {
     this.getOrder();
   }
 
-
   /**
    * update order status too recieved
    */

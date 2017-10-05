@@ -3,6 +3,7 @@ import Header from './reuse/header'
 
 import {http} from '../http-requests'
 
+var countries = require('country-list')();
 
 class Register extends React.Component {
   constructor() {
@@ -11,7 +12,8 @@ class Register extends React.Component {
     this.state = {
       username: '',
       email: '',
-      password: ''
+      password: '',
+      country: countries.getNames()[0]
     }
 
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
@@ -35,13 +37,21 @@ class Register extends React.Component {
     this.setState({password: event.target.value});
   }
 
+  handleCountryChange = (event) => {
+    this.setState({country: event.target.value});
+  }
+
+  /**
+   * send register details to the API to create Account
+   */
   submitRegister(e) {
     e.preventDefault();
 
     http.post('users', {
       username: this.state.username,
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
+      countryCode: countries.getCode(this.state.country)
     })
       .then(res => {
         console.log('register response --');
@@ -50,6 +60,28 @@ class Register extends React.Component {
   }
 
   render () {
+    const selectCountry = (
+      <div className="form-group">
+        <label htmlFor="selectCountry" className="col-lg-2 control-label">
+          Country
+        </label>
+
+        <div className="col-lg-10">
+          <select className="form-control" onChange={this.handleCountryChange}>
+            {
+              countries.getNames().map(country => {
+                return (
+                  <option value={country} onChange={this.handleCountryChange}>
+                    {country}
+                  </option>
+                )
+              })
+            }
+          </select>
+        </div>
+      </div>
+    );
+
     return (
       <div>
       <Header />
@@ -86,9 +118,11 @@ class Register extends React.Component {
                   id="inputEmail"
                    placeholder="Email"
                    onChange={this.handleEmailChange}
-                  />
+                />
               </div>
             </div>
+
+            { selectCountry }
 
             {/* password */}
             <div className="form-group">
@@ -102,7 +136,6 @@ class Register extends React.Component {
                   onChange={this.handlePasswordChange}
                 />
               </div>
-
             </div>
 
             {/* sign up */}
