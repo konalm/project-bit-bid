@@ -1,6 +1,8 @@
 import React from 'react';
 import stripeCheckout from 'react-stripe-checkout';
+import axios from 'axios'
 import {http} from '../../http-requests'
+import {getStripePubKey} from '../../globals'
 
 import Header from '../reuse/header'
 import ProfileSidebar from './profile-sidebar'
@@ -23,13 +25,181 @@ class ProfileBilling extends React.Component {
       cvc: '',
       feeback: '',
       cardPlaceholder: '**** **** **** ****',
+      currency: '',
+      allCurrencies: {}
     };
 
     this.getUserBilling();
 
     // Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
 
-    Stripe.setPublishableKey('pk_test_rfNwWQrKTzQnIBcNZf2tM7AZ');
+    // Stripe.setPublishableKey('pk_test_rfNwWQrKTzQnIBcNZf2tM7AZ');
+
+    Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
+    this.getAllCurrencies();
+
+    /****
+     *****/
+    Stripe.bankAccount.createToken({
+      country: 'GB',
+      currency: 'gbp',
+      account_number: '00012345',
+      account_holder_name: 'connor moore',
+      account_holder_type: 'individual',
+    }, (status, response) => {
+      if (response.error) {
+        console.log("ERROR");
+        console.log(response.error);
+      }
+
+      console.log('response ---->');
+      console.log(response);
+    })
+  }
+
+  /***
+    handlers
+  *****/
+  handleNumberChange = (event) => {
+    this.setState({cardNumber: event.target.value});
+  }
+
+  handleExpMonthChange = (event) => {
+    this.setState({expMonth: event.target.value});
+  }
+
+  handleExpYearChange = (event) => {
+    this.setState({expYear: event.target.value});
+  }
+
+  handleCvcChange = (event) => {
+    this.setState({cvc: event.target.value});
+  }
+
+  handleCurrencyChange = (event) => {
+    this.setState({currency: event.target.value});
+  }
+
+  /**
+   * get all exisiting currencies
+   */
+  getAllCurrencies = () => {
+    axios.get(`https://openexchangerates.org/api/currencies.json`)
+      .then(res => { this.setState({allCurrencies: res.data}) })
+      .catch(err => { throw new Error(err) });
+  }
+
+
+  /**
+   * card submitted using stripe elements
+   */
+  submitCard = (e) => {
+    e.preventDefault();
+    // Stripe.setPublishableKey(getStripePubKey());
+
+    // Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
+    // Stripe.setPublishableKey('pk_test_rfNwWQrKTzQnIBcNZf2tM7AZ');
+
+    // let form = this.refs.testform;
+
+    console.log('submit card');
+
+    Promise.all([this.createStripeCustomer(), this.createStripeDebitForAccount()])
+      .then(res => {
+        this.setState({feedback: 'debit card details updated'});
+      })
+      .catch(err => { throw new Error(err) });
+
+    // Stripe.createToken(form, (status, response) => {
+    //   console.log('stripejs response --->');
+    //   console.log(response);
+    //
+    //   if (response.error) {
+    //     this.setState({feedback: response.error.message});
+    //     return;
+    //   }
+    //
+    //   http.post('user-update-stripe', {userCardDetails: response})
+    //     .then(response => {
+    //       this.resetCardDetails();
+    //     })
+    //     .catch(err => {
+    //       this.setState({feedback: 'There was an issue updating your billing'});
+    //     })
+    // })
+  };
+
+  /**
+   * create stripe customer (for giving payment)
+   */
+  createStripeCustomer = () => {
+    return;
+    console.log('create stripe customer');
+
+    this.createStripeToken().then(res => {
+      console.log('response -->');
+      console.log(res);
+
+      console.log('API - create customer');
+
+      http.post('create-stripe-customer', {userCardDetails: res})
+        .then(res => { this.resetCardDetails(); })
+        .catch(err => { throw new Error(err); })
+    })
+    .catch(err => { this.setState({feedback: err}); });
+  };
+
+  /**
+   * create stripe account (for recieving payments)
+   */
+  createStripeDebitForAccount = () => {
+    console.log('create stripe account');
+
+    this.createStripeToken().then(res => {
+      console.log('response -->');
+      console.log(res);
+
+      console.log('API - create account');
+
+      // return;
+
+      http.post('user-update-stripe-account-debit', {userCardDetails: res})
+        .then(res => { this.resetCardDetails(); })
+        .catch(err => { throw new Error(err); })
+    })
+    .catch(err => { this.setState({feedback: err}) });
+  };
+
+  /**
+   * create stripe token with user debit card
+   */
+  createStripeToken = () => {
+    Stripe.setPublishableKey('pk_test_rXXahTHmJ1MHiN3fcrQ1oDno');
+
+     const cardDetails = {
+       number: this.state.cardNumber,
+       cvc: this.state.cvc,
+       exp_month: this.state.expMonth,
+       exp_year: this.state.expYear,
+       currency: this.state.currency
+     }
+
+    return new Promise((resolve, reject) => {
+      Stripe.createToken(cardDetails, (status, response) => {
+        if (response.error) { reject(response.error); }
+
+        resolve(response);
+      });
+    });
+
+      // Stripe.createToken(form, (status, response) => {
+      //   if (response.error) {
+      //     this.setState({feedback: response.error.message});
+      //     reject(response.error);
+      //   }
+      //
+      //   resolve(response);
+      // });
 
 
     // Stripe.createToken({
@@ -42,57 +212,20 @@ class ProfileBilling extends React.Component {
     //   console.log('token response ---->');
     //   console.log(response);
     // })
-
-    // return;
-    //
-    // Stripe.bankAccount.createToken({
-    //   country: 'GB',
-    //   currency: 'GBP',
-    //   account_number: 121034,
-    //   account_holder_name: 'connor moore',
-    //   account_holder_type: 'individual'
-    // }, (status, response) => {
-    //   console.log('bank account token res ----->');
-    //   console.log(response);
-    // });
-  }
+  };
 
   /**
-   * card submitted using stripe elements
+   * reset card details to empty the input fields in the view
    */
-  submitCard = (e) => {
-    e.preventDefault();
-
-    Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
-
-    // Stripe.setPublishableKey('pk_test_rfNwWQrKTzQnIBcNZf2tM7AZ');
-    let form = this.refs.testform;
-
-    Stripe.createToken(form, (status, response) => {
-      console.log('stripejs response --->');
-      console.log(response);
-
-      if (response.error) {
-        this.setState({feedback: response.error.message});
-        return;
-      }
-
-
-      http.post('user-update-stripe', {userCardDetails: response})
-        .then(response => {
-          this.setState({
-            feedback: 'your billing was updated successfully',
-            cardNumber: '',
-            expMonth: '',
-            expYear: '',
-            cvc: ''
-          });
-        })
-        .catch(err => {
-          this.setState({feedback: 'There was an issue updating your billing'});
-        })
-    })
-  };
+  resetCardDetails = () => {
+    this.setState({
+      feedback: 'your billing was updated successfully',
+      cardNumber: '',
+      expMonth: '',
+      expYear: '',
+      cvc: ''
+    });
+  }
 
   /**
    * get user Stripe Id and last 4 digits of card
@@ -108,26 +241,29 @@ class ProfileBilling extends React.Component {
       })
   }
 
-  /*****
-    handlers
-  *****/
-  handleCardNumberChange = (e) => {
-    this.setState({cardNumber: e.target.value});
-  }
-
-  handleExpMonthChange = (e) => {
-    this.setState({expMonth: e.target.value})
-  }
-
-  handleExpYearChange = (e) => {
-    this.setState({expYear: e.target.value});
-  }
-
-  handleCvcChange = (e) => {
-    this.setState({cvc: e.target.value});
-  }
-
   render() {
+    const selectCurrency = (
+      <div className="form-group">
+        <label htmlFor="selectCurrency">
+          Currency
+        </label>
+
+        <div className="input-group">
+          <select className="form-control" onChange={this.handleCurrencyChange}>
+            {
+              Object.keys(this.state.allCurrencies).map(currency => {
+                return (
+                  <option value={currency}>
+                    {this.state.allCurrencies[currency]}
+                  </option>
+                )
+              })
+            }
+          </select>
+        </div>
+      </div>
+    );
+
     return (
       <div>
         <Header />
@@ -143,7 +279,6 @@ class ProfileBilling extends React.Component {
 
             <div className="col-lg-8">
               <h3>Card Details</h3>
-
               <br /> <br />
 
               <div className="container">
@@ -166,14 +301,13 @@ class ProfileBilling extends React.Component {
 
                             <div className="input-group">
                               <input
-                                type="text"
+                                type="number"
                                 className="form-control"
                                 id="cardNumber"
                                 placeholder={this.state.cardPlaceholder}
                                 data-stripe='number'
-                                onChange={this.handleCardNumberChange}
+                                onChange={this.handleNumberChange}
                                 value={this.state.cardNumber}
-
                                 required autoFocus
                               />
 
@@ -194,7 +328,7 @@ class ProfileBilling extends React.Component {
                                 {/* expiration month */}
                                 <div className="col-xs-6 col-lg-6 pl-ziro">
                                   <input
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     id="expityMonth"
                                     placeholder="MM"
@@ -208,7 +342,7 @@ class ProfileBilling extends React.Component {
                                 {/* expiration year */}
                                 <div className="col-xs-6 col-lg-6 pl-ziro">
                                   <input
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     id="expityYear"
                                     placeholder="YY"
@@ -241,6 +375,8 @@ class ProfileBilling extends React.Component {
                               </div>
                             </div> {/* col */}
                           </div> {/* row end */}
+
+                        {selectCurrency}
 
                           <br/>
 

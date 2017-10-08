@@ -59,7 +59,8 @@ class ListedItems extends React.Component {
 
   render() {
     return (
-      <View items={this.state.items}
+      <View
+        items={this.state.items}
         passCategoryToParent={this.selectCategoryCallback}
       />
   )}
