@@ -109,9 +109,7 @@ class PurchaseAddress extends React.Component {
    * update new address
    */
   updateAddress = () => {
-    return http.put('user-address', {
-      address: this.state.newAddress
-    })
+    return http.put('user-address', { address: this.state.newAddress })
   }
 
   /**

@@ -13,30 +13,25 @@ class NotEligibleModal extends React.Component {
     super(props);
   }
 
-  redirectToAccount = (e) => {
+  /**
+   * redirect to bank account
+   */
+  redirectToBankAccount = (e) => {
     e.preventDefault();
 
-    $("#NotEligibleModal").modal('hide');
-
-    if (!this.props.userHasAddress) {
-      this.props.history.push('/profile/address');
-      return;
-    }
-
-    this.props.history.push('/profile/billing');
+    $("#noBankAccountModal").modal('hide');
+    this.props.history.push('/profile/bank-account');
   }
 
   render() {
-    const requiredTitle = this.props.userHasAddress ?
-      'Address Required' : 'Billing Information Required';
+    const requiredTitle = 'Bank Account Required';
 
-    const textResponse = this.props.userHasAddress ?
-      'your address is required to continue. So the seller knows where to send the goodies.' :
-      'your billing information is required before you can purchase any items';
+    const textResponse = `Your bank account is required to recive payment before
+      you can sell any items.`;
 
     return (
       <div>
-        <div id="NotEligibleModal" className="modal fade" role="dialog" ref="modal" >
+        <div id="noBankAccountModal" className="modal fade" role="dialog" ref="modal" >
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
@@ -55,9 +50,9 @@ class NotEligibleModal extends React.Component {
                 <button
                   type="button"
                   className="btn btn-default"
-                  onClick={(e) => this.redirectToAccount(e)}
+                  onClick={(e) => this.redirectToBankAccount(e)}
                 >
-                  Go To Account
+                  Add Bank Account
                 </button>
 
                 <button type="button" className="btn btn-default" data-dismiss="modal">

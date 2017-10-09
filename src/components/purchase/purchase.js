@@ -131,15 +131,10 @@ class Purchase extends React.Component {
    * create the order
    */
    createOrder = () => {
-     console.log('create order !!');
-
      http.post('handle-order-transaction', {
        itemId: this.state.item._id
      })
      .then(res => {
-       console.log('order complete !!');
-       console.log(res);
-
       /* redirect to order/orderId */
       this.props.history.push(`/orders/${res.data.data._id}`);
      })

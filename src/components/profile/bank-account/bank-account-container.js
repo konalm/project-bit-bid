@@ -5,6 +5,9 @@ import {getStripePubKey} from '../../../globals'
 import axios from 'axios'
 import View from './bank-account.jsx'
 
+var Stripe = window.Stripe;
+
+
 class ProfileBankAccount extends React.Component {
   constructor() {
     super();
@@ -17,10 +20,12 @@ class ProfileBankAccount extends React.Component {
       accountNumber: '',
       routingNumber: '',
       accountType: 'individual',
-      allCurrencies: {}
+      allCurrencies: {},
+      user: {}
     }
 
     this.getAllCurrencies();
+    this.getUser();
   }
 
   /*****
@@ -53,13 +58,22 @@ class ProfileBankAccount extends React.Component {
   createBankAccount = (event) => {
     event.preventDefault();
 
-    console.log('create bank account');
+    Stripe.setPublishableKey(getStripePubKey());
 
-    console.log(this.state.currency);
-    console.log(this.state.accountHolder);
-    console.log(this.state.accountNumber);
-    console.log(this.state.routingNumber);
-    console.log(this.state.accountType);
+    Stripe.bankAccount.createToken({
+      country: this.state.user.country,
+      currency: this.state.currency,
+      account_number: this.state.accountNumber,
+      account_holder_name: this.state.accountHolder,
+      account_holder_type: this.state.accountType
+    }, (status, response) => {
+      if (response.error) { throw new Error(response.error); }
+
+      http.post('user-update-stripe-account-debit', {
+        bankAccountDetails: response
+      })
+        .catch(err => { throw new Error(response.error); })
+    })
   }
 
   /**
@@ -69,6 +83,15 @@ class ProfileBankAccount extends React.Component {
     axios.get(`https://openexchangerates.org/api/currencies.json`)
       .then(res => { this.setState({allCurrencies: res.data}) })
       .catch(err => { throw new Error(err) });
+  }
+
+  /**
+   * get user
+   */
+  getUser = () => {
+    http.get('user')
+    .then(res => { this.setState({user: res.data})})
+    .catch(err => { throw new Error(err); })
   }
 
   render() {

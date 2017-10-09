@@ -20,7 +20,7 @@ import profileOrders from './components/profile/orders'
 import profileSales from './components/profile/sales'
 import viewProfile from './components/profile/viewProfile'
 
-import listItem from './components/listItem'
+import listItem from './components/list-item'
 import login from './components/login'
 import register from './components/register'
 import purchaseItem from './components/purchase/purchase'
