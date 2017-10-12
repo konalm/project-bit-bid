@@ -30,31 +30,7 @@ class ProfileBilling extends React.Component {
     };
 
     this.getUserBilling();
-
-    // Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
-
-    // Stripe.setPublishableKey('pk_test_rfNwWQrKTzQnIBcNZf2tM7AZ');
-
-    Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
     this.getAllCurrencies();
-
-    /****
-     *****/
-    Stripe.bankAccount.createToken({
-      country: 'GB',
-      currency: 'gbp',
-      account_number: '00012345',
-      account_holder_name: 'connor moore',
-      account_holder_type: 'individual',
-    }, (status, response) => {
-      if (response.error) {
-        console.log("ERROR");
-        console.log(response.error);
-      }
-
-      console.log('response ---->');
-      console.log(response);
-    })
   }
 
   /***
@@ -89,12 +65,14 @@ class ProfileBilling extends React.Component {
       .catch(err => { throw new Error(err) });
   }
 
-
   /**
    * card submitted using stripe elements
    */
   submitCard = (e) => {
     e.preventDefault();
+
+    this.createStripeCustomer();
+
     // Stripe.setPublishableKey(getStripePubKey());
 
     // Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
@@ -102,13 +80,14 @@ class ProfileBilling extends React.Component {
 
     // let form = this.refs.testform;
 
-    console.log('submit card');
+    // console.log('submit card');
+    //
+    // Promise.all([this.createStripeCustomer(), this.createStripeDebitForAccount()])
+    //   .then(res => {
+    //     this.setState({feedback: 'debit card details updated'});
+    //   })
+    //   .catch(err => { throw new Error(err) });
 
-    Promise.all([this.createStripeCustomer(), this.createStripeDebitForAccount()])
-      .then(res => {
-        this.setState({feedback: 'debit card details updated'});
-      })
-      .catch(err => { throw new Error(err) });
 
     // Stripe.createToken(form, (status, response) => {
     //   console.log('stripejs response --->');
@@ -133,7 +112,6 @@ class ProfileBilling extends React.Component {
    * create stripe customer (for giving payment)
    */
   createStripeCustomer = () => {
-    return;
     console.log('create stripe customer');
 
     this.createStripeToken().then(res => {
@@ -152,29 +130,28 @@ class ProfileBilling extends React.Component {
   /**
    * create stripe account (for recieving payments)
    */
-  createStripeDebitForAccount = () => {
-    console.log('create stripe account');
-
-    this.createStripeToken().then(res => {
-      console.log('response -->');
-      console.log(res);
-
-      console.log('API - create account');
-
-      // return;
-
-      http.post('user-update-stripe-account-debit', {userCardDetails: res})
-        .then(res => { this.resetCardDetails(); })
-        .catch(err => { throw new Error(err); })
-    })
-    .catch(err => { this.setState({feedback: err}) });
-  };
+  // createStripeDebitForAccount = () => {
+  //   this.createStripeToken().then(res => {
+  //     console.log('response -->');
+  //     console.log(res);
+  //
+  //     console.log('API - create account');
+  //
+  //     // return;
+  //
+  //     http.post('user-update-stripe-account-debit', {userCardDetails: res})
+  //       .then(res => { this.resetCardDetails(); })
+  //       .catch(err => { throw new Error(err); })
+  //   })
+  //   .catch(err => { this.setState({feedback: err}) });
+  // };
 
   /**
    * create stripe token with user debit card
    */
   createStripeToken = () => {
-    Stripe.setPublishableKey('pk_test_rXXahTHmJ1MHiN3fcrQ1oDno');
+    // Stripe.setPublishableKey('pk_test_rXXahTHmJ1MHiN3fcrQ1oDno');
+    Stripe.setPublishableKey(getStripePubKey());
 
      const cardDetails = {
        number: this.state.cardNumber,

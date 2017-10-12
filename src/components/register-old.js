@@ -45,8 +45,6 @@ class Register extends React.Component {
    * send register details to the API to create Account
    */
   submitRegister(e) {
-    console.log('submit register !!');
-    
     e.preventDefault();
 
     http.post('users', {
@@ -56,10 +54,9 @@ class Register extends React.Component {
       countryCode: countries.getCode(this.state.country)
     })
       .then(res => {
-        console.log('register response -->');
+        console.log('register response --');
         console.log(res)
       })
-      .catch(err => { throw new Error(err); })
   }
 
   render () {

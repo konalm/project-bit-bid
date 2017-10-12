@@ -20,6 +20,8 @@ class PurchasePaymentDetails extends React.Component {
     }
 
     this.getUserBilling();
+
+    console.log('payment details here');
   }
 
   /**
@@ -28,7 +30,10 @@ class PurchasePaymentDetails extends React.Component {
   getUserBilling = () => {
     http.get('user-billing')
       .then(res => {
-        if (!res.data.cardLastFour) { return }
+        if (!res.data.cardLastFour) {
+          this.setState({selectNewCard: res.data});
+          return;
+        }
 
         this.setState({cardLastFour: res.data.cardLastFour});
         this.setState({previousCardAvailable: true});
@@ -108,7 +113,7 @@ class PurchasePaymentDetails extends React.Component {
       return false;
     }
 
-    return http.post('user-update-stripe', {userCardDetails: cardDetails});
+    return http.post('create-stripe-customer', {userCardDetails: cardDetails});
   }
 
   /**

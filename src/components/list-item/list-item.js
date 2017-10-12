@@ -1,4 +1,6 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom'
+
 import Header from '../reuse/header'
 import axios from 'axios'
 import {http} from '../../http-requests'
@@ -14,8 +16,8 @@ window.jQuery = window.$ = $;
 require('bootstrap');
 
 class ListItem extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       title: '',
@@ -43,26 +45,6 @@ class ListItem extends React.Component {
     this.removeImgUpload = this.removeImgUpload.bind(this);
 
     this.checkUserHasBankAccount();
-
-    $('#noBankAccountModal').on('hidden.bs.modal', function () {
-      console.log('modal closed !!');
-    });
-
-    $('#noBankAccountModal').on('hidden', function () {
-      console.log('modal closed xx !!');
-    })
-  }
-
-  componentDidMount() {
-    console.log('component did mount');
-
-    $('#noBankAccountModal').on('hidden.bs.modal', function () {
-      console.log('modal closed !!');
-    });
-
-    $('#noBankAccountModal').on('hidden', function () {
-      console.log('modal closed xx !!');
-    })
   }
 
   /**********
@@ -174,15 +156,8 @@ class ListItem extends React.Component {
    * check user has bank account
    */
   checkUserHasBankAccount = () => {
-    console.log('check user has bank account !!');
-
     http.get('bank-accounts').then(res => {
-      console.log('bank accounts length ->');
-      console.log(res);
-      console.log(res.data.data.length);
-
       if (res.data.data.length === 0) {
-        console.log('show !!!!');
         $('#noBankAccountModal').modal('show');
       }
 
@@ -418,4 +393,4 @@ class ListItem extends React.Component {
   }
 };
 
-export default ListItem;
+export default withRouter(ListItem);

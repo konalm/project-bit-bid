@@ -17,6 +17,8 @@ class PurchaseAddress extends React.Component {
     }
 
     this.getPreviousAddress();
+
+    console.log('address here !!');
   }
 
   /***
@@ -60,7 +62,10 @@ class PurchaseAddress extends React.Component {
   getPreviousAddress = () => {
     http.get('user-address')
       .then(res => {
-        if (!res.data.addressLine) { return }
+        if (!res.data.addressLine) {
+          this.setState({selectNewAddress: true});
+          return;
+        }
 
         this.setState({previousAddress: res.data});
         this.setState({previousAddressAvailable: true});
@@ -120,7 +125,6 @@ class PurchaseAddress extends React.Component {
     this.setState({validationResponse: ''});
 
     if (!this.state.selectNewAddress) { return true; }
-
     if (!this.newAddressValidation()) { return false; }
 
     return this.updateAddress();

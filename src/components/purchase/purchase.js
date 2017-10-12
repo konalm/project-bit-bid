@@ -37,8 +37,9 @@ class Purchase extends React.Component {
     this.newPaymentDetails = false;
     this.paymentDetails = {};
     this.checkUserAddress();
-  }
 
+    console.log('purchase C');
+  }
 
   /**
    * check if user has address in DB
@@ -140,7 +141,6 @@ class Purchase extends React.Component {
      })
      .catch(err => {
        if (err.response.status === 403) {
-        console.log('already purchased');
         this.setState({orderResponse: 'Sorry, this item has already been sold'});
         return;
       }
@@ -223,12 +223,9 @@ class Purchase extends React.Component {
   render() {
     let jsxView = '';
 
-    /* only render view if user has address */
-    if (this.state.userHasAddress) {
-      jsxView = !this.state.orderComplete ?
-        this.purchaseJsx(this.state.item) :
-        this.purchaseCompleteJsx();
-    }
+    jsxView = !this.state.orderComplete ?
+      this.purchaseJsx(this.state.item) :
+      this.purchaseCompleteJsx();
 
     return (
       <div>

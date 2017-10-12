@@ -11,6 +11,16 @@ require('bootstrap');
 class NotEligibleModal extends React.Component {
   constructor(props) {
     super(props);
+
+    this.redirectToBankAccountClicked = false;
+  }
+
+  componentDidMount() {
+    /* redirect home if no bank account modal closed */
+    $('#noBankAccountModal').on('hidden.bs.modal', function()  {
+      if (this.redirectToBankAccountClicked) { return; }
+      this.props.history.push('/items-listed');
+    }.bind(this));
   }
 
   /**
@@ -19,6 +29,7 @@ class NotEligibleModal extends React.Component {
   redirectToBankAccount = (e) => {
     e.preventDefault();
 
+    this.redirectToBankAccountClicked = true;
     $("#noBankAccountModal").modal('hide');
     this.props.history.push('/profile/bank-account');
   }
