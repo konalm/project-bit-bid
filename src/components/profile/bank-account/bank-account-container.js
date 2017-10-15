@@ -12,8 +12,6 @@ class ProfileBankAccount extends React.Component {
   constructor() {
     super();
 
-    console.log('profile bank account const');
-
     this.state = {
       currency: '',
       accountHolder: '',
