@@ -16,6 +16,7 @@ class Register extends React.Component {
       password: '',
       confirmPassword: '',
       feedbackMessage: '',
+      successfullyRegistered: false,
       country: countries.getNames()[0]
     }
   }
@@ -24,18 +25,22 @@ class Register extends React.Component {
     handlers
   ****/
   handleUsernameChange = (event) => {
+    console.log('username change');
     this.setState({username: event.target.value});
   }
 
   handleEmailChange = (event) => {
+    console.log('email change');
     this.setState({email: event.target.value});
   }
 
   handlePasswordChange = (event) => {
     this.setState({password: event.target.value});
+    console.log('passw change');
   }
 
   handleConfirmPasswordChange = (event) => {
+    console.log('confirm passw');
     this.setState({confirmPassword: event.target.value});
   }
 
@@ -99,6 +104,7 @@ class Register extends React.Component {
       password: this.state.password,
       countryCode: countries.getCode(this.state.country)
     })
+      .then(res => { this.setState({successfullyRegistered: true}); })
       .catch(err => {
         if (err.response.status === 403) {
           this.setState({feedbackMessage: err.response.data});
@@ -119,6 +125,7 @@ class Register extends React.Component {
         handleCountryChange={this.handleCountryChange}
         submitRegister={this.submitRegister}
         feedbackMessage={this.state.feedbackMessage}
+        successfullyRegistered={this.state.successfullyRegistered}
       />
     );
   }

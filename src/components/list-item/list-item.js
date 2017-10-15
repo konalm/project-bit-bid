@@ -147,9 +147,7 @@ class ListItem extends React.Component {
     let newImgUploads = this.state.uploadedImages;
     newImgUploads.splice(index, 1);
 
-    this.setState({
-      uploadedImages: newImgUploads
-    });
+    this.setState({ uploadedImages: newImgUploads });
   }
 
   /**

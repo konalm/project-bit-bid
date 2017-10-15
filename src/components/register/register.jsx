@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 import Header from '../reuse/header'
 import {getApiUrl} from '../../globals'
@@ -9,7 +10,7 @@ var countries = require('country-list')();
 /**
  * select country JSX
  */
-const SelectCountry = (props) => {
+const SelectCountry = ({props}) => {
   return (
     <div className="form-group">
       <label htmlFor="selectCountry" className="col-lg-2 control-label">
@@ -30,7 +31,141 @@ const SelectCountry = (props) => {
         </select>
       </div>
     </div>
+  )
+}
+
+/**
+ * register form JSX
+ */
+const Form = ({props}) => {
+  if (props.successfullyRegistered) { return null; }
+
+  return (
+    <form
+      className="form-horizontal"
+      onSubmit={(event) => props.submitRegister(event)}
+    >
+      <fieldset>
+        {/* username */}
+        <div className="form-group">
+          <label htmlFor="inputUserName" className="col-lg-2 control-label">
+            User Name
+          </label>
+
+          <div className="col-lg-10">
+            <input
+              type="text"
+              className="form-control"
+              id="inputUsername"
+              placeholder="Unique User Name"
+              onChange={(event) => props.handleUsernameChange(event)}
+              required
+            />
+          </div>
+        </div>
+
+        {/* email */}
+        <div className="form-group">
+          <label
+            htmlFor="inputEmail"
+            className="col-lg-2 control-label"
+          >
+            Email
+          </label>
+
+          <div className="col-lg-10">
+            <input
+              type="text"
+              className="form-control"
+              id="inputEmail"
+              placeholder="Email"
+              onChange={props.handleEmailChange}
+              required
+            />
+          </div>
+        </div>
+
+        <SelectCountry props={props} />
+
+        {/* password */}
+        <div className="form-group">
+          <label
+            htmlFor="inputPassword"
+            className="col-lg-2 control-label"
+          >
+            Password
+          </label>
+
+          <div className="col-lg-10">
+            <input
+              type="password"
+              className="form-control"
+              id="inputPassword"
+              placeholder="Password"
+              onChange={props.handlePasswordChange}
+              required
+            />
+          </div>
+        </div>
+
+        {/* confirm password */}
+        <div className="form-group">
+          <label
+            htmlFor="inputPassword"
+            className="col-lg-2 control-label"
+          >
+            Confirm Password
+          </label>
+
+          <div className="col-lg-10">
+            <input
+              type="password"
+              className="form-control"
+              id="inputPassword"
+              placeholder="Password"
+              onChange={props.handleConfirmPasswordChange}
+              required
+            />
+          </div>
+        </div>
+
+        {/* sign up */}
+        <div className="form-group">
+          <div className="col-lg-10 col-lg-offset-2">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              required
+            >
+              Sign up
+            </button>
+          </div>
+        </div>
+
+        {props.feedbackMessage}
+      </fieldset>
+    </form>
   );
+}
+
+/**
+ * succesfully registered feedback JSX
+ */
+const SuccessfullyRegistered = ({props}) => {
+  if (!props.successfullyRegistered) {
+    return null;
+  }
+
+  return (
+    <div>
+      <p className="lead">Successully Registered.</p>
+      <Link to="/login">
+        <button className="btn btn-primary">
+          Go to login
+        </button>
+      </Link>
+    </div>
+  )
 }
 
 /**
@@ -44,109 +179,8 @@ const Register = (props) => {
         <h1>Register</h1>
         <hr />
 
-        <form className="form-horizontal"
-          onSubmit={(event) => props.submitRegister(event)}
-        >
-          <fieldset>
-            {/* username */}
-            <div className="form-group">
-              <label htmlFor="inputUserName" className="col-lg-2 control-label">
-                User Name
-              </label>
-
-              <div className="col-lg-10">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputUsername"
-                  placeholder="Unique User Name"
-                  onChange={(event) => props.handleUsernameChange(event)}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* email */}
-            <div className="form-group">
-              <label
-                htmlFor="inputEmail"
-                className="col-lg-2 control-label"
-              >
-                Email
-              </label>
-
-              <div className="col-lg-10">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputEmail"
-                  placeholder="Email"
-                  onChange={props.handleEmailChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <SelectCountry props={props} />
-
-            {/* password */}
-            <div className="form-group">
-              <label
-                htmlFor="inputPassword"
-                className="col-lg-2 control-label"
-              >
-                Password
-              </label>
-
-              <div className="col-lg-10">
-                <input
-                  type="password"
-                  className="form-control"
-                  id="inputPassword"
-                  placeholder="Password"
-                  onChange={props.handlePasswordChange}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* confirm password */}
-            <div className="form-group">
-              <label
-                htmlFor="inputPassword"
-                className="col-lg-2 control-label"
-              >
-                Confirm Password
-              </label>
-
-              <div className="col-lg-10">
-                <input
-                  type="password"
-                  className="form-control"
-                  id="inputPassword"
-                  placeholder="Password"
-                  onChange={props.handleConfirmPasswordChange}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* sign up */}
-            <div className="form-group">
-              <div className="col-lg-10 col-lg-offset-2">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  required
-                >
-                  Sign up
-                </button>
-              </div>
-            </div>
-
-            {props.feedbackMessage}
-          </fieldset>
-        </form>
+        <Form props={props} />
+        <SuccessfullyRegistered props={props} />
       </div>
     </div>
   )
