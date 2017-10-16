@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 import Header from '../reuse/header'
 import NoBankAccountModal from './no-bank-account-modal'
@@ -39,10 +40,30 @@ const PreviewImages = ({props}) => {
 }
 
 /**
+ * Item listed feedback Jsx
+ */
+const ItemListedFeedback = ({props}) => {
+  if (!props.itemListed) {
+    return null;
+  }
+
+  return (
+    <div>
+      <p className="lead">Successfully Listed Item.</p>
+      <Link to={`/items/${props.listedItemId}`}>
+        <button className="btn btn-primary">
+          View Item
+        </button>
+      </Link>
+    </div>
+  )
+}
+
+/**
  * list item form jsx
  */
 const ListItemForm = ({props}) => {
-  if (!props.userHasBankAccount) { return null; }
+  if (!props.userHasBankAccount || props.itemListed) { return null; }
 
   return (
     <form
@@ -190,6 +211,7 @@ const ListItemForm = ({props}) => {
         {/* delivery method (royal mail / free) */}
         <div className="form-group">
           <label className="col-lg-2 control-label">Delivery Type</label>
+
           <div className="col-lg-10">
             <div className="radio">
               <label>
@@ -257,6 +279,9 @@ const ListItemForm = ({props}) => {
   )
 }
 
+/**
+ * List Item JSX
+ */
 const ListItem = (props) => {
   return (
     <div>
@@ -266,6 +291,7 @@ const ListItem = (props) => {
         <br /> <br />
 
         <ListItemForm props={props} />
+        <ItemListedFeedback props={props} />
       </div>
 
       <NoBankAccountModal />

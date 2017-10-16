@@ -24,7 +24,9 @@ class ListItem extends React.Component {
       uploadedImages: [],
       userHasBankAccount: false,
       checkedForBankAccount: false,
-      feedbackMessage: ''
+      feedbackMessage: '',
+      itemListed: false,
+      listedItemId: ''
     }
 
     this.checkUserHasBankAccount();
@@ -129,6 +131,10 @@ class ListItem extends React.Component {
     })
       .then(res => {
         let itemId = res.data.data._id;
+        this.setState({
+          listedItemId: res.data.data._id,
+          itemListed: true
+        });
 
         return http.post(`items/${itemId}`, imgData, {
           headers: { 'Authorization': cookies.get('bit_bid_key') }
@@ -204,6 +210,8 @@ class ListItem extends React.Component {
         userHasBankAccount={this.state.userHasBankAccount}
         uploadedImages={this.state.uploadedImages}
         feedbackMessage={this.state.feedbackMessage}
+        itemListed={this.state.itemListed}
+        listedItemId={this.state.listedItemId}
       />
     )
   }

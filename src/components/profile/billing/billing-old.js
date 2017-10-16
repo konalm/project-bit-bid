@@ -11,7 +11,6 @@ import $ from 'jquery';
 window.jQuery = window.$ = $;
 
 var Stripe = window.Stripe;
-
 let loadedStripe = false;
 
 class ProfileBilling extends React.Component {
@@ -70,56 +69,14 @@ class ProfileBilling extends React.Component {
    */
   submitCard = (e) => {
     e.preventDefault();
-
     this.createStripeCustomer();
-
-    // Stripe.setPublishableKey(getStripePubKey());
-
-    // Stripe.setPublishableKey('pk_test_1A7DT5FrpPtXH3gDJHgf5Epk');
-    // Stripe.setPublishableKey('pk_test_rfNwWQrKTzQnIBcNZf2tM7AZ');
-
-    // let form = this.refs.testform;
-
-    // console.log('submit card');
-    //
-    // Promise.all([this.createStripeCustomer(), this.createStripeDebitForAccount()])
-    //   .then(res => {
-    //     this.setState({feedback: 'debit card details updated'});
-    //   })
-    //   .catch(err => { throw new Error(err) });
-
-
-    // Stripe.createToken(form, (status, response) => {
-    //   console.log('stripejs response --->');
-    //   console.log(response);
-    //
-    //   if (response.error) {
-    //     this.setState({feedback: response.error.message});
-    //     return;
-    //   }
-    //
-    //   http.post('user-update-stripe', {userCardDetails: response})
-    //     .then(response => {
-    //       this.resetCardDetails();
-    //     })
-    //     .catch(err => {
-    //       this.setState({feedback: 'There was an issue updating your billing'});
-    //     })
-    // })
   };
 
   /**
    * create stripe customer (for giving payment)
    */
   createStripeCustomer = () => {
-    console.log('create stripe customer');
-
     this.createStripeToken().then(res => {
-      console.log('response -->');
-      console.log(res);
-
-      console.log('API - create customer');
-
       http.post('create-stripe-customer', {userCardDetails: res})
         .then(res => { this.resetCardDetails(); })
         .catch(err => { throw new Error(err); })
@@ -128,29 +85,9 @@ class ProfileBilling extends React.Component {
   };
 
   /**
-   * create stripe account (for recieving payments)
-   */
-  // createStripeDebitForAccount = () => {
-  //   this.createStripeToken().then(res => {
-  //     console.log('response -->');
-  //     console.log(res);
-  //
-  //     console.log('API - create account');
-  //
-  //     // return;
-  //
-  //     http.post('user-update-stripe-account-debit', {userCardDetails: res})
-  //       .then(res => { this.resetCardDetails(); })
-  //       .catch(err => { throw new Error(err); })
-  //   })
-  //   .catch(err => { this.setState({feedback: err}) });
-  // };
-
-  /**
    * create stripe token with user debit card
    */
   createStripeToken = () => {
-    // Stripe.setPublishableKey('pk_test_rXXahTHmJ1MHiN3fcrQ1oDno');
     Stripe.setPublishableKey(getStripePubKey());
 
      const cardDetails = {
@@ -168,27 +105,6 @@ class ProfileBilling extends React.Component {
         resolve(response);
       });
     });
-
-      // Stripe.createToken(form, (status, response) => {
-      //   if (response.error) {
-      //     this.setState({feedback: response.error.message});
-      //     reject(response.error);
-      //   }
-      //
-      //   resolve(response);
-      // });
-
-
-    // Stripe.createToken({
-    //   number: 4000056655665556,
-    //   cvc: 123,
-    //   exp_month: 10,
-    //   exp_year: 20,
-    //   currency: 'usd'
-    // }, (status, response) => {
-    //   console.log('token response ---->');
-    //   console.log(response);
-    // })
   };
 
   /**
@@ -350,8 +266,8 @@ class ProfileBilling extends React.Component {
                                   required
                                 />
                               </div>
-                            </div> {/* col */}
-                          </div> {/* row end */}
+                            </div>
+                          </div>
 
                         {selectCurrency}
 
@@ -373,14 +289,14 @@ class ProfileBilling extends React.Component {
                             Update Card Details
                           </button>
                         </form>
-                      </div> {/* panel body */}
-                    </div> {/* panel default */}
-                  </div> {/* col */}
-                </div> {/* row */ }
-              </div> {/* container */}
-            </div> {/* col */}
-          </div> {/* row */}
-        </div> {/* container */}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
