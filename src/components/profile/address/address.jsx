@@ -3,6 +3,8 @@ import React from 'react';
 import Header from '../../reuse/header'
 import ProfileSidebar from '../profile-sidebar'
 
+var countries = require('country-list')();
+
 /**
  * Success message JSX
  */
@@ -24,7 +26,7 @@ const SuccessMessage = ({props}) => {
  */
 const ErrorMessage = ({props}) => {
   if (!props.errorMessage) {
-    return;
+    return null;
   }
 
   return (
@@ -35,77 +37,108 @@ const ErrorMessage = ({props}) => {
   )
 }
 
+
+/**
+ * select country JSX
+ */
+const SelectCountry = ({props}) => {
+
+  console.log('current country --->');
+  console.log(props.country);
+
+  const currentCountry = countries.getName(props.country);
+  console.log(currentCountry);
+
+  return (
+    <div className="row">
+      <select
+        className="form-control"
+        onChange={props.handleCountryChange}
+      >
+        {
+          countries.getNames().map(country => {
+            return (
+              <option
+                value={country}
+                onChange={props.handleCountryChange}
+                selected={country === currentCountry}
+              >
+                {country}
+              </option>
+            )
+          })
+        }
+      </select>
+    </div>
+  )
+}
+
 /**
  * Form JSX
  */
 const Form = ({props}) => {
   return (
-    <form onSubmit={this.submitAddress}>
+    <form onSubmit={(event) => props.submitAddress(event)}>
       <h3> Address </h3>
       <br />
+      {/* address line */}
       <div className="row">
         <input
           type="text"
           name="address"
           placeholder="Address line"
           className="form-control"
-          value={this.state.addressLine1}
-          onChange={this.handleAddressLineChange}
+          value={props.addressLine1}
+          onChange={props.handleAddressLineChange}
           required
         />
       </div>
 
       <br />
 
+      {/* address line 2 */}
       <div className="row">
         <input
           type="text"
           name="address-line-2"
           placeholder="Address line 2"
           className="form-control"
-          value={this.state.addressLine2}
-          onChange={this.handleAddressLine2Change}
+          value={props.addressLine2}
+          onChange={props.handleAddressLine2Change}
         />
       </div>
 
       <br />
 
-      <div className="row">
-        <input
-          type="text"
-          name="country"
-          placeholder="Country"
-          className="form-control"
-          value={this.state.country}
-          onChange={this.handleCountryChange}
-          required
-        />
-      </div>
+      {/* country */}
+      <SelectCountry props={props} />
 
       <br />
 
+      {/* city */}
       <div className="row">
         <input
           type="text"
           name="city"
           placeholder="City"
           className="form-control"
-          value={this.state.city}
-          onChange={this.handleCityChange}
+          value={props.city}
+          onChange={props.handleCityChange}
           required
         />
       </div>
 
       <br />
 
+      {/* postcode */}
       <div className="row">
         <input
           type="text"
           name="postcode"
           placeholder="Postcode"
           className="form-control"
-          value={this.state.postcode}
-          onChange={this.handlePostCodeChange}
+          value={props.postcode}
+          onChange={props.handlePostCodeChange}
           required
         />
       </div>
@@ -125,7 +158,7 @@ const Form = ({props}) => {
 /**
  * Address JSX
  */
-const Address = () => {
+const Address = (props) => {
   return (
     <div>
       <Header />
@@ -148,4 +181,4 @@ const Address = () => {
   )
 }
 
-return default Address;
+export default Address;

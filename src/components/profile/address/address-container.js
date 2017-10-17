@@ -1,11 +1,13 @@
 import React from 'react'
 import axios from 'axios'
 
-import {http} from '../../http-requests'
-import {getApiUrl} from '../../globals'
-import {getApiToken} from '../../globals'
+import {http} from '../../../http-requests'
+import {getApiUrl} from '../../../globals'
+import {getApiToken} from '../../../globals'
 
 import AddressJsx from './address.jsx'
+
+var countries = require('country-list')();
 
 class ProfileAddress extends React.Component {
   constructor(props) {
@@ -37,7 +39,9 @@ class ProfileAddress extends React.Component {
   }
 
   handleCountryChange = (event) => {
-    this.setState({country: event.target.value});
+    console.log('handle country change');
+    const countryCode = countries.getCode(event.target.value);
+    this.setState({country: countryCode});
   }
 
   handleCityChange = (event) => {
@@ -62,15 +66,22 @@ class ProfileAddress extends React.Component {
           postcode: response.data.postcode
         });
       })
-      .catch(err => {throw new Error(err)})
+      .catch(err => { throw new Error(err) })
   }
 
   /**
    * post address details to the API
    */
-  submitAddress = (e) => {
-    e.preventDefault();
+  submitAddress = (event) => {
+    console.log('submit address !!');
+    console.log(this.state.country);
+
+    // return;
+
+    event.preventDefault();
     this.setState({errorMessage: '', successMessage: ''});
+
+
 
     http.put(`user-address`, {
       addressLine: this.state.addressLine1,
@@ -87,7 +98,7 @@ class ProfileAddress extends React.Component {
       })
       .catch(error => {
         /* failed backend validation */
-        if (error.response.status === 422) {
+        if (error.response.status === 403) {
           this.setState({errorMessage: error.response.data});
         }
       })
@@ -95,8 +106,23 @@ class ProfileAddress extends React.Component {
 
   render () {
     return (
-      <AddressJsx />
-      
+      <AddressJsx
+        successMessage={this.state.successMessage}
+        errorMessage={this.state.errorMessage}
+        addressLine1={this.state.addressLine1}
+        addressLine2={this.state.addressLine2}
+        country={this.state.country}
+        city={this.state.city}
+        postcode={this.state.postcode}
+        submitAddress={this.submitAddress}
+        handleAddressLineChange={this.handleAddressLineChange}
+        handleAddressLine2={this.handleAddressLine2Change}
+        handleCountryChange={this.handleCountryChange}
+        handleCityChange={this.handleCityChange}
+        handlePostCodeChange={this.handlePostCodeChange}
+      />
     )
   }
 }
+
+export default ProfileAddress;
