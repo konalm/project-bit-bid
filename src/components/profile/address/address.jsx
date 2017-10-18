@@ -42,12 +42,7 @@ const ErrorMessage = ({props}) => {
  * select country JSX
  */
 const SelectCountry = ({props}) => {
-
-  console.log('current country --->');
-  console.log(props.country);
-
   const currentCountry = countries.getName(props.country);
-  console.log(currentCountry);
 
   return (
     <div className="row">

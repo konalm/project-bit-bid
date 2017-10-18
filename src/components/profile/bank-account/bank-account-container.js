@@ -19,18 +19,23 @@ class ProfileBankAccount extends React.Component {
       routingNumber: '',
       accountType: 'individual',
       allCurrencies: {},
-      user: {}
+      user: {},
+      feedback: '',
+
+      accountHolderPlaceholder: '',
+      accountNumberPlaceholder: '',
+      routingNumberPlaceholder: ''
     }
 
     this.getAllCurrencies();
     this.getUser();
+    this.getBankAccount();
   }
 
   /*****
     handlers
   *****/
   handleCurrencyChange = (event) => {
-    console.log('parent -> handle currency change');
     this.setState({currency: event.target.value});
   }
 
@@ -50,28 +55,61 @@ class ProfileBankAccount extends React.Component {
     this.setState({accountType: event.target.value});
   }
 
+
   /**
    * create external account (bank account) in the API for stripe
    */
   createBankAccount = (event) => {
     event.preventDefault();
-
     Stripe.setPublishableKey(getStripePubKey());
+    this.setState({feedback: ''})
 
     Stripe.bankAccount.createToken({
       country: this.state.user.country,
       currency: this.state.currency,
+      routing_number: this.state.routingNumber,
       account_number: this.state.accountNumber,
       account_holder_name: this.state.accountHolder,
       account_holder_type: this.state.accountType
     }, (status, response) => {
-      if (response.error) { throw new Error(response.error); }
+      if (response.error) {
+        this.setState({feedback: response.error.message});
+        return;
+      }
 
       http.post('user-update-stripe-account-debit', {
         bankAccountDetails: response
       })
-        .catch(err => { throw new Error(response.error); })
+        .then(() => {
+          this.setState({feedback: 'Bank Account has been updated'})
+          this.emptyState();
+        })
+        .catch(err => {
+          if (err.response.status === 401) {
+            this.setState({feedback: err.response.data})
+            return;
+          }
+
+          throw new Error(response.error);
+        })
     })
+  }
+
+  /**
+   * get existing account if exisits
+   */
+  getBankAccount = () => {
+    http.get('bank-accounts').then(res => {
+      if (res.data.data.length > 0) {
+        this.setState({
+          accountHolderPlaceholder: res.data.data[0].account_holder_name,
+          accountNumberPlaceholder: `****${res.data.data[0].last4}`,
+          routingNumberPlaceholder: res.data.data[0].routing_number,
+          currency: res.data.data[0].currency
+        })
+      }
+    })
+    .catch(err => { throw new Error(err) })
   }
 
   /**
@@ -92,16 +130,38 @@ class ProfileBankAccount extends React.Component {
     .catch(err => { throw new Error(err); })
   }
 
+  /**
+   * empty state
+   */
+  emptyState = () => {
+    this.setState({
+      accountHolder: '',
+      accountNumber: '',
+      routingNumber: '',
+    })
+  }
+
+
   render() {
     return (
       <View
+        currency={this.state.currency}
+        accountHolder={this.state.accountHolder}
+        accountNumber={this.state.accountNumber}
+        routingNumber={this.state.routingNumber}
+        createBankAccount={this.createBankAccount}
+        allCurrencies={this.state.allCurrencies}
+        feedback={this.state.feedback}
+
+        accountHolderPlaceholder={this.state.accountHolderPlaceholder}
+        accountNumberPlaceholder={this.state.accountNumberPlaceholder}
+        routingNumberPlaceholder={this.state.routingNumberPlaceholder}
+
         handleCurrencyChange={this.handleCurrencyChange}
         handleAccountHolderChange={this.handleAccountHolderChange}
         handleAccountNumberChange={this.handleAccountNumberChange}
         handleRoutingNumberChange={this.handleRoutingNumberChange}
         handleAccountTypeChange={this.handleAccountTypeChange}
-        createBankAccount={this.createBankAccount}
-        allCurrencies={this.state.allCurrencies}
       />
     )
   }

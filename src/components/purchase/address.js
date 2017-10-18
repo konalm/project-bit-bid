@@ -17,8 +17,6 @@ class PurchaseAddress extends React.Component {
     }
 
     this.getPreviousAddress();
-
-    console.log('address here !!');
   }
 
   /***

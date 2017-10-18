@@ -39,7 +39,6 @@ class ProfileAddress extends React.Component {
   }
 
   handleCountryChange = (event) => {
-    console.log('handle country change');
     const countryCode = countries.getCode(event.target.value);
     this.setState({country: countryCode});
   }
@@ -73,15 +72,8 @@ class ProfileAddress extends React.Component {
    * post address details to the API
    */
   submitAddress = (event) => {
-    console.log('submit address !!');
-    console.log(this.state.country);
-
-    // return;
-
     event.preventDefault();
     this.setState({errorMessage: '', successMessage: ''});
-
-
 
     http.put(`user-address`, {
       addressLine: this.state.addressLine1,

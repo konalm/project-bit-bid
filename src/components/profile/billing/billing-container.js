@@ -36,8 +36,6 @@ class ProfileBilling extends React.Component {
     handlers
   *****/
   handleNumberChange = (event) => {
-    console.log('handle number change');
-
     this.setState({cardNumber: event.target.value});
   }
 
@@ -102,13 +100,13 @@ class ProfileBilling extends React.Component {
   createStripeToken = () => {
     Stripe.setPublishableKey(getStripePubKey());
 
-     const cardDetails = {
-       number: this.state.cardNumber,
-       cvc: this.state.cvc,
-       exp_month: this.state.expMonth,
-       exp_year: this.state.expYear,
-       currency: this.state.currency
-     }
+    const cardDetails = {
+      number: this.state.cardNumber,
+      cvc: this.state.cvc,
+      exp_month: this.state.expMonth,
+      exp_year: this.state.expYear,
+      currency: this.state.currency
+    }
 
     return new Promise((resolve, reject) => {
       Stripe.createToken(cardDetails, (status, response) => {

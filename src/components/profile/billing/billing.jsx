@@ -18,7 +18,7 @@ const SelectCurrency = ({props}) => {
           {
             Object.keys(props.allCurrencies).map(currency => {
               return (
-                <option value={currency}>
+                <option value={currency} selected={currency = props.currency}>
                   {props.allCurrencies[currency]}
                 </option>
               )
