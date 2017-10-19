@@ -32,9 +32,6 @@ class Header extends React.Component {
    */
   submitSearch(e) {
     e.preventDefault();
-    console.log('submit search')
-    console.log(this.state.search);
-    console.log('DISPATCH');
     store.dispatch(changeSearchQuery(this.state.search));
   }
 

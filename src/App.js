@@ -10,7 +10,7 @@ import itemsListed from './components/ItemsListed'
 import items from './components/items'
 import item from './components/item'
 
-import profile from './components/profile/profile'
+
 import profileAccount from './components/profile/account'
 import profileAddress from './components/profile/address'
 import profileActivity from './components/profile/activity'
@@ -45,11 +45,11 @@ const App = () => (
       <Route path="/list-item" component={listItem} />
 
       {/* profile */}
-      <Route exact path="/profile" component={profile} />
+      <Redirect exact from="/profile" to="/profile/account" />
+      <Route path="/profile/account" component={profileAccount} />
       <Route path="/profile/activity" component={profileActivity} />
       <Route path="/profile/messages" component={profileMessages} />
       <Route path="/profile/address" component={profileAddress} />
-      <Route path="/profile/account" component={profileAccount} />
       <Route path="/profile/billing" component={profileBilling} />
       <Route path="/profile/bank-account" component={profileBankAccount} />
       <Route path="/profile/orders" component={profileOrders} />

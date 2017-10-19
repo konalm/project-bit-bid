@@ -2,27 +2,51 @@ import React from 'react'
 import {Link, NavLink} from 'react-router-dom'
 import {http} from '../../http-requests';
 
-
 class ProfileSidebar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      currentMenu: 'account'
-    }
-
-    this.selectTab = this.selectTab.bind(this);
+    this.menuItems = [
+      {
+        name:'Account',
+        link: '/profile/account'
+      },
+      {
+        name: 'Activity',
+        link: '/profile/activity'
+      },
+      {
+        name: 'Messages',
+        link: '/profile/messages'
+      },
+      {
+        name: 'Address',
+        link: '/profile/address'
+      },
+      {
+        name: 'Billing',
+        link: '/profile/billing'
+      },
+      {
+        name: 'Orders',
+        link: '/profile/orders'
+      }
+    ]
   }
 
-  selectTab(selectedMenu) {
-    this.setState({currentMenu: selectedMenu});
-  }
+
 
   render() {
     return (
       <div className="col-lg-3 col-md-3 col-sm-4">
         <br />
         <ul className="nav nav-pills nav-stacked">
+          <li>
+            <Link to="/profile/account" activeClassName="active">
+              Account
+            </Link>
+          </li>
+
           <li>
             <Link to="/profile/activity" activeClassName="active">
               Activity
@@ -35,11 +59,6 @@ class ProfileSidebar extends React.Component {
             </Link>
           </li>
 
-          <li>
-            <Link to="/profile/account" activeClassName="active">
-              Account
-            </Link>
-          </li>
 
           <li>
             <Link to="/profile/address" activeClassName="active">
