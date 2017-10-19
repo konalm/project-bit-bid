@@ -42,8 +42,6 @@ class Profile extends React.Component {
           Email Address:
           <br />
           BitCoin Wallet:
-
-
         </div>
     }
 

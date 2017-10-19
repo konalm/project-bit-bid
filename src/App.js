@@ -7,6 +7,7 @@ import $ from 'jquery';
 import './App.css';
 import home from './components/Home'
 import itemsListed from './components/ItemsListed'
+import items from './components/items'
 import item from './components/item'
 
 import profile from './components/profile/profile'
@@ -39,7 +40,7 @@ const App = () => (
     <Switch>
       <Redirect exact from="/" to="items-listed" component={home} />
       {/* items */}
-      <Route path="/items-listed" component={itemsListed} />
+      <Route path="/items-listed" component={items} />
       <Route path="/items/:itemId" component={item} />
       <Route path="/list-item" component={listItem} />
 

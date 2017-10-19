@@ -17,6 +17,8 @@ class ListedItems extends React.Component {
     }
 
     this.updateListItems();
+
+    console.log('items component');
   }
 
   /**
