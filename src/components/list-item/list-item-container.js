@@ -1,7 +1,10 @@
 import React from 'react';
-import {http} from '../../http-requests'
+import { withRouter } from 'react-router-dom'
 import cookies from 'js-cookie'
 import $ from 'jquery';
+
+import requireAuth from '../../requireAuth'
+import {http} from '../../http-requests'
 
 import ListItemJsx from './list-item.jsx'
 
@@ -13,6 +16,7 @@ class ListItem extends React.Component {
     super(props);
 
     this.state = {
+      loggedIn: false,
       title: '',
       category: '',
       condition: '',
@@ -29,8 +33,19 @@ class ListItem extends React.Component {
       listedItemId: ''
     }
 
+    this.checkUserIsLoggedIn();
     this.checkUserHasBankAccount();
   }
+
+  /**
+   * send request to the Api to check if user is logged in
+   */
+  checkUserIsLoggedIn = () => {
+    requireAuth()
+      .then(() => { this.setState({loggedIn: true}); })
+      .catch(() => { this.props.history.push('/login'); })
+  }
+
 
   /**********
     handlers
@@ -196,6 +211,8 @@ class ListItem extends React.Component {
   }
 
   render () {
+    if (!this.state.loggedIn) { return null; }
+
     return (
       <ListItemJsx
         handleTitleChange={this.handleTitleChange}
@@ -217,4 +234,4 @@ class ListItem extends React.Component {
   }
 }
 
-export default ListItem;
+export default withRouter(ListItem);

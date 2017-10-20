@@ -1,8 +1,10 @@
 import React from 'react'
-import Header from '../reuse/header'
+import { withRouter } from 'react-router-dom'
 
+import requireAuth from '../../requireAuth'
 import {http} from '../../http-requests'
 
+import Header from '../reuse/header'
 import SaleView from './sale.jsx'
 
 class Sale extends React.Component {
@@ -15,7 +17,17 @@ class Sale extends React.Component {
       buyer: {}
     }
 
+    this.checkUserIsLoggedIn();
     this.getSale();
+  }
+
+  /**
+   * send request to the Api to check if user is logged in
+   */
+  checkUserIsLoggedIn = () => {
+    requireAuth()
+      .then(() => { this.setState({loggedIn: true}); })
+      .catch(() => { this.props.history.push('/login'); })
   }
 
   /**
@@ -46,6 +58,8 @@ class Sale extends React.Component {
   }
 
   render () {
+    if (!this.state.loggedIn) { return null; }
+
     return (
       <SaleView
         sale={this.state.sale}

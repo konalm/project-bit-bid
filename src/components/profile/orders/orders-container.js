@@ -1,4 +1,7 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
+
+import requireAuth from '../../../requireAuth'
 import {http} from '../../../http-requests'
 
 import View from './orders.jsx'
@@ -8,10 +11,21 @@ class orders extends React.Component {
     super();
 
     this.state = {
+      loggedIn: false,
       orders: {}
     }
 
+    this.checkUserIsLoggedIn();
     this.getOrders();
+  }
+
+  /**
+   * send request to the Api to check if user is logged in
+   */
+  checkUserIsLoggedIn = () => {
+    requireAuth()
+      .then(() => { this.setState({loggedIn: true}); })
+      .catch(() => { this.props.history.push('/login'); })
   }
 
   /**
@@ -26,4 +40,4 @@ class orders extends React.Component {
   render() { return <View orders={this.state.orders}/> }
 }
 
-export default orders;
+export default withRouter(orders);

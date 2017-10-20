@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 import axios from 'axios';
 
+import requireAuth from '../../requireAuth'
 import {http} from '../../http-requests';
 import Header from './../reuse/header';
 import NotEligibleModal from './not-eligible-modal'
@@ -19,6 +20,7 @@ class Purchase extends React.Component {
     super(props);
 
     this.state = {
+      loggedIn: false,
       item: {},
       orderComplete: false,
       userHasAddress: true,
@@ -39,6 +41,15 @@ class Purchase extends React.Component {
     this.checkUserAddress();
 
     console.log('purchase C');
+  }
+
+  /**
+   * send request to the Api to check if user is logged in
+   */
+  checkUserIsLoggedIn = () => {
+    requireAuth()
+      .then(() => { this.setState({loggedIn: true}); })
+      .catch(() => { this.props.history.push('/login'); })
   }
 
   /**
@@ -221,6 +232,8 @@ class Purchase extends React.Component {
   }
 
   render() {
+    if (!this.state.loggedIn) { return null; }
+
     let jsxView = '';
 
     jsxView = !this.state.orderComplete ?

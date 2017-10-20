@@ -1,5 +1,6 @@
 import React from 'react';
 import stripeCheckout from 'react-stripe-checkout';
+import requireAuth from '../../../requireAuth'
 import axios from 'axios'
 import {http} from '../../../http-requests'
 import {getStripePubKey} from '../../../globals'
@@ -18,6 +19,7 @@ class ProfileBilling extends React.Component {
     super();
 
     this.state = {
+      loggedIn: false,
       cardNumber: '',
       expMonth: '',
       expYear: '',
@@ -26,10 +28,20 @@ class ProfileBilling extends React.Component {
       cardPlaceholder: '**** **** **** ****',
       currency: '',
       allCurrencies: {}
-    };
+    }
 
+    this.checkUserIsLoggedIn();
     this.getUserBilling();
     this.getAllCurrencies();
+  }
+
+  /**
+   * send request to the Api to check if user is logged in
+   */
+  checkUserIsLoggedIn = () => {
+    requireAuth()
+      .then(() => { this.setState({loggedIn: true}); })
+      .catch(() => { this.props.history.push('/login'); })
   }
 
   /***
@@ -145,6 +157,8 @@ class ProfileBilling extends React.Component {
   }
 
   render() {
+    if (!this.state.loggedIn) { return null; }
+    
     return (
       <BillingJsx
         handleCurrencyChange={this.handleCurrencyChange}

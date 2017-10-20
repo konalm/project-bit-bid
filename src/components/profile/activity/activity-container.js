@@ -1,15 +1,31 @@
 import React from 'react';
 import ActivityJsx from './activity.jsx'
+import requireAuth from '../../../requireAuth'
 
-console.log('FUCK YOU');
 
 class ActivityFeed extends React.Component {
   constructor() {
     super();
-    console.log('activity feed !!!!!');
+
+    this.state = {
+      loggedIn: false
+    }
+
+    this.checkUserIsLoggedIn();
+  }
+
+  /**
+   * send request to the Api to check if user is logged in
+   */
+  checkUserIsLoggedIn = () => {
+    requireAuth()
+      .then(() => { this.setState({loggedIn: true}); })
+      .catch(() => { this.props.history.push('/login'); })
   }
 
   render() {
+    if (!this.state.loggedIn) { return null; }
+
     return (
       <ActivityJsx />
     )

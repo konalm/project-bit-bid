@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom'
 
 import moment from 'moment'
 
+import {getApiUrl} from '../../../globals'
+
 /**
  * Sale JSX
  */

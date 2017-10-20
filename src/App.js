@@ -33,6 +33,10 @@ import testC from './components/items'
 window.jQuery = window.$ = $;
 require('bootstrap');
 
+const requireAuth = (nextState, replace) => {
+  console.log('require auth !!');
+}
+
 
 const App = () => (
   <Router>
@@ -46,7 +50,7 @@ const App = () => (
 
       {/* profile */}
       <Redirect exact from="/profile" to="/profile/account" />
-      <Route path="/profile/account" component={profileAccount} />
+      <Route path="/profile/account" component={profileAccount} onEnter={requireAuth} />
       <Route path="/profile/activity" component={profileActivity} />
       <Route path="/profile/messages" component={profileMessages} />
       <Route path="/profile/address" component={profileAddress} />

@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
+import requireAuth from '../../../requireAuth'
 import {http} from '../../../http-requests'
 import {getApiUrl} from '../../../globals'
 import {getApiToken} from '../../../globals'
@@ -14,6 +15,7 @@ class ProfileAddress extends React.Component {
     super(props);
 
     this.state = {
+      loggedIn: false,
       addressLine1: '',
       addressLine2: '',
       country: '',
@@ -24,7 +26,17 @@ class ProfileAddress extends React.Component {
       successMessage: '',
     }
 
+    this.checkUserIsLoggedIn();
     this.getUserAddress();
+  }
+
+  /**
+   * send request to the Api to check if user is logged in
+   */
+  checkUserIsLoggedIn = () => {
+    requireAuth()
+      .then(() => { this.setState({loggedIn: true}); })
+      .catch(() => { this.props.history.push('/login'); })
   }
 
   /****
@@ -97,6 +109,8 @@ class ProfileAddress extends React.Component {
   }
 
   render () {
+    if (!this.state.loggedIn) { return null; }
+    
     return (
       <AddressJsx
         successMessage={this.state.successMessage}

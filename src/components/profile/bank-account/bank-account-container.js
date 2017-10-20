@@ -1,4 +1,6 @@
 import React from 'react';
+
+import requireAuth from '../../../requireAuth'
 import {http} from '../../../http-requests'
 import {getStripePubKey} from '../../../globals'
 
@@ -13,6 +15,7 @@ class ProfileBankAccount extends React.Component {
     super();
 
     this.state = {
+      loggedIn: false,
       currency: '',
       accountHolder: '',
       accountNumber: '',
@@ -27,9 +30,19 @@ class ProfileBankAccount extends React.Component {
       routingNumberPlaceholder: ''
     }
 
+    this.checkUserIsLoggedIn();
     this.getAllCurrencies();
     this.getUser();
     this.getBankAccount();
+  }
+
+  /**
+   * send request to the Api to check if user is logged in
+   */
+  checkUserIsLoggedIn = () => {
+    requireAuth()
+      .then(() => { this.setState({loggedIn: true}); })
+      .catch(() => { this.props.history.push('/login'); })
   }
 
   /*****
@@ -143,6 +156,8 @@ class ProfileBankAccount extends React.Component {
 
 
   render() {
+    if (!this.state.loggedIn) { return null; }
+    
     return (
       <View
         currency={this.state.currency}
