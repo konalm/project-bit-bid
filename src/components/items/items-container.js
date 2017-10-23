@@ -1,8 +1,17 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom'
 import axios from 'axios';
+import $ from 'jquery';
+import { connect } from 'react-redux'
+import store from '../../store'
+
 import {http} from '../../http-requests';
+import requireAuth from '../../requireAuth'
 
 import View from './items-view';
+
+window.jQuery = window.$ = $;
+require('bootstrap');
 
 
 class ListedItems extends React.Component {
@@ -13,12 +22,11 @@ class ListedItems extends React.Component {
       items: {},
       searchQuery: 'default',
       category: 'default',
-      imgCollection: []
+      imgCollection: [],
+      loginMessage: ''
     }
 
     this.updateListItems();
-
-    console.log('items component');
   }
 
   /**
@@ -26,10 +34,19 @@ class ListedItems extends React.Component {
    */
   updateListItems = () => {
     http.get(`items/category/${this.state.category}/search/${this.state.searchQuery}`)
-      .then(res => {
-        this.setState({items: res.data});
-      })
+      .then(res => { this.setState({items: res.data}); })
       .catch(err => { throw new Error(err); })
+  }
+
+  /**
+   * go to purchase item view
+   */
+  goToPurchaseItem = (event, itemId) => {
+    this.setState({loginMessage: 'Must be logged in to make purchases'});
+
+    requireAuth()
+      .then(() => { this.props.history.push(`/purchase/${itemId}`); })
+      .catch(() => { $('#loginModal').modal('show'); })
   }
 
   /**
@@ -41,7 +58,8 @@ class ListedItems extends React.Component {
 
   /* watch category for change */
   componentWillUpdate(nextProps) {
-    if (this.state.searchQuery !== nextProps.searchQuery &&
+    if (
+      this.state.searchQuery !== nextProps.searchQuery &&
       nextProps.searchQuery !== undefined
     ) {
       this.setState({'searchQuery': nextProps.searchQuery});
@@ -64,8 +82,19 @@ class ListedItems extends React.Component {
       <View
         items={this.state.items}
         passCategoryToParent={this.selectCategoryCallback}
+        goToPurchaseItem={this.goToPurchaseItem}
+        loginMessage={this.state.loginMessage}
       />
   )}
 }
 
-export default ListedItems;
+/**
+ * map state search query to prop
+ */
+const mapStateToProps = (state) => ({
+  searchQuery: store.getState()[0].currentSearchQuery
+})
+
+ListedItems = connect(mapStateToProps)(ListedItems);
+
+export default withRouter(ListedItems);

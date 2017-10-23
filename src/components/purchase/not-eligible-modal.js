@@ -13,9 +13,11 @@ class NotEligibleModal extends React.Component {
     super(props);
   }
 
+  /**
+   * redirect to account 
+   */
   redirectToAccount = (e) => {
     e.preventDefault();
-
     $("#NotEligibleModal").modal('hide');
 
     if (!this.props.userHasAddress) {

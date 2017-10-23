@@ -43,9 +43,7 @@ const PreviewImages = ({props}) => {
  * Item listed feedback Jsx
  */
 const ItemListedFeedback = ({props}) => {
-  if (!props.itemListed) {
-    return null;
-  }
+  if (!props.itemListed) { return null; }
 
   return (
     <div>

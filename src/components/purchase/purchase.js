@@ -38,9 +38,9 @@ class Purchase extends React.Component {
     this.address = {};
     this.newPaymentDetails = false;
     this.paymentDetails = {};
-    this.checkUserAddress();
 
-    console.log('purchase C');
+    this.checkUserIsLoggedIn();
+    this.checkUserAddress();
   }
 
   /**

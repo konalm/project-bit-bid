@@ -2,6 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 
 import PropTypes from 'prop-types'
+import {getApiUrl} from '../../globals'
 
 
 /**
@@ -11,12 +12,12 @@ const ImgCollection = ({item}) => {
   return (
     <div className="row mb2">
       { item.imgCollection.map(img => {
-          return (
-            <div className="col-lg-3">
-              <img
-                src={`http://localhost:8080/api/render-item-img/${item.user._id}/item/${item._id}/img-path/${img}`}
-                width="200px"
-              />
+        return (
+          <div className="col-lg-3">
+            <img
+              src={`${getApiUrl()}render-item-img/${item.user._id}/item/${item._id}/img-path/${img}`}
+              width="200px"
+            />
             </div>
   )})}
     </div>
@@ -40,7 +41,8 @@ const Seller = ({item}) => {
 /**
  * Item JSX
  */
-const Item = ({item}) => {
+const Item = (props) => {
+  const item = props.item;
   item.delivery = item.deliveryMethod === 1 ? 'royal mail' : 'free';
 
   return (
@@ -63,9 +65,12 @@ const Item = ({item}) => {
           <button className="btn btn-primary mr2"> View </button>
         </Link>
 
-        <Link to={`/purchase/${item._id}`}>
-          <button className="btn btn-primary"> Purchase </button>
-        </Link>
+        <button
+          className="btn btn-primary"
+          onClick={(event) => props.goToPurchaseItem(event, item._id)}
+        >
+          Purchase
+        </button>
       </div>
     </div>
 )}

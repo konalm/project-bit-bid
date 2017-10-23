@@ -5,6 +5,7 @@ import Header from '../reuse/header';
 import SidebarComponent from '../reuse/sidebar'
 
 import Item from './items-child.jsx'
+import LoginModal from '../reuse/login-modal'
 
 
 class Items  extends React.Component {
@@ -23,7 +24,12 @@ class Items  extends React.Component {
 
   render() {
     const allItems = Object.keys(this.props.items).map((key, index) => {
-      return <Item item={this.props.items[key]} />
+      return (
+        <Item
+          item={this.props.items[key]}
+          goToPurchaseItem={this.props.goToPurchaseItem}
+        />
+      )
     });
 
     return (
@@ -44,6 +50,8 @@ class Items  extends React.Component {
             </div>
           </div>
         </div>
+
+        <LoginModal message={this.props.loginMessage} />
       </div>
   )};
 }

@@ -151,6 +151,8 @@ class ListItem extends React.Component {
           itemListed: true
         });
 
+        console.log('posting item image data to the API');
+
         return http.post(`items/${itemId}`, imgData, {
           headers: { 'Authorization': cookies.get('bit_bid_key') }
         })
