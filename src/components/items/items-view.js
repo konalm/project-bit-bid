@@ -5,10 +5,11 @@ import Header from '../reuse/header';
 import SidebarComponent from '../reuse/sidebar'
 
 import Item from './items-child.jsx'
+import Pagination from './pagination'
 import LoginModal from '../reuse/login-modal'
 
 
-class Items  extends React.Component {
+class Items extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -17,8 +18,6 @@ class Items  extends React.Component {
     callback
   ***/
   selectCategoryCallback = (category) => {
-    console.log('select category callback !!');
-    console.log(category);
     this.props.passCategoryToParent(category);
   }
 
@@ -43,10 +42,17 @@ class Items  extends React.Component {
           </div>
 
           <div className="row">
-            <SidebarComponent parentSelectCategory={this.selectCategoryCallback} />
+            <SidebarComponent
+              parentSelectCategory={this.selectCategoryCallback}
+            />
 
             <div className="col-lg-8">
               { allItems }
+
+              <Pagination
+                count={this.props.itemCount}
+                handlePageNoChange={this.props.handlePageNoChange}
+              /> 
             </div>
           </div>
         </div>

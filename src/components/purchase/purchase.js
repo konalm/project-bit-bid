@@ -197,7 +197,6 @@ class Purchase extends React.Component {
           <PaymentDetails
             ref="paymentDetailsComponent"
             passPaymentDetailsToParent={this.paymentDetailsCallback}
-
           />
         </div>
 

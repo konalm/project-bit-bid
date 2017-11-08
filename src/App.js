@@ -6,7 +6,7 @@ import $ from 'jquery';
 
 import './App.css';
 import home from './components/Home'
-import itemsListed from './components/ItemsListed'
+// import itemsListed from './components/ItemsListed'
 import items from './components/items'
 import item from './components/item'
 

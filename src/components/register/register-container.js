@@ -6,6 +6,7 @@ import RegisterJsx from './register.jsx'
 var countries = require('country-list')(); 
 
 
+
 class Register extends React.Component {
   constructor() {
     super();
@@ -25,12 +26,10 @@ class Register extends React.Component {
     handlers
   ****/
   handleUsernameChange = (event) => {
-    console.log('username change');
     this.setState({username: event.target.value});
   }
 
   handleEmailChange = (event) => {
-    console.log('email change');
     this.setState({email: event.target.value});
   }
 

@@ -10,9 +10,6 @@ require('bootstrap');
 class LoginModal extends React.Component {
   constructor(props) {
     super(props);
-
-    console.log('props --->');
-    console.log(props);
   }
 
   /**

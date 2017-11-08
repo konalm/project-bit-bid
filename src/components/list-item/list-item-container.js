@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react'
 import { withRouter } from 'react-router-dom'
 import cookies from 'js-cookie'
 import $ from 'jquery';
@@ -78,6 +78,14 @@ class ListItem extends React.Component {
     this.setState({price: event.target.value});
   }
 
+  handleBidStartingPrice = (event) => {
+    this.setState({bidStartingPrice: event.target.value});
+  }
+
+  handleBidDurationChange = (event) => {
+    this.setState({bidDuration: event.target.value});
+  }
+
   /**
    * validate inputted item data
    */
@@ -146,12 +154,11 @@ class ListItem extends React.Component {
     })
       .then(res => {
         let itemId = res.data.data._id;
+
         this.setState({
           listedItemId: res.data.data._id,
           itemListed: true
         });
-
-        console.log('posting item image data to the API');
 
         return http.post(`items/${itemId}`, imgData, {
           headers: { 'Authorization': cookies.get('bit_bid_key') }
@@ -200,6 +207,8 @@ class ListItem extends React.Component {
    */
   checkUserHasBankAccount = () => {
     http.get('bank-accounts').then(res => {
+
+
       if (res.data.data.length === 0) {
         $('#noBankAccountModal').modal('show');
       }
@@ -225,6 +234,8 @@ class ListItem extends React.Component {
         handleSellMethodChange={this.handleSellMethodChange}
         handleDeliveryMethodChange={this.handleDeliveryMethodChange}
         handlePriceChange={this.handlePriceChange}
+        handleBidStartingPrice={this.handleBidStartingPrice}
+        handleBidDurationChange={this.handleBidDurationChange}
         submitListItem={this.submitListItem}
         userHasBankAccount={this.state.userHasBankAccount}
         uploadedImages={this.state.uploadedImages}

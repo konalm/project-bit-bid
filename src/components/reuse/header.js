@@ -41,8 +41,6 @@ class Header extends React.Component {
    * dispatch search query to redux store
    */
   submitSearch = (e) => {
-    console.log('submit search');
-    
     e.preventDefault();
     store.dispatch(changeSearchQuery(this.state.search));
   }

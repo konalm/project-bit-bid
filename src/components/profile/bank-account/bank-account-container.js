@@ -68,7 +68,6 @@ class ProfileBankAccount extends React.Component {
     this.setState({accountType: event.target.value});
   }
 
-
   /**
    * create external account (bank account) in the API for stripe
    */
@@ -96,6 +95,7 @@ class ProfileBankAccount extends React.Component {
         .then(() => {
           this.setState({feedback: 'Bank Account has been updated'})
           this.emptyState();
+          this.getBankAccount();
         })
         .catch(err => {
           if (err.response.status === 401) {
@@ -138,9 +138,14 @@ class ProfileBankAccount extends React.Component {
    * get user
    */
   getUser = () => {
+    console.log('get user');
+
     http.get('user')
-    .then(res => { this.setState({user: res.data})})
-    .catch(err => { throw new Error(err); })
+      .then(res => {
+        console.log(res.data);
+        this.setState({user: res.data})
+      })
+      .catch(err => { throw new Error(err); })
   }
 
   /**
@@ -157,7 +162,7 @@ class ProfileBankAccount extends React.Component {
 
   render() {
     if (!this.state.loggedIn) { return null; }
-    
+
     return (
       <View
         currency={this.state.currency}

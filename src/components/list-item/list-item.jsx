@@ -58,10 +58,61 @@ const ItemListedFeedback = ({props}) => {
 }
 
 /**
+ * list item for bid
+ */
+const ListItemForBid = ({props}) => {
+  return (
+    <div>
+      {/* bid starting price */}
+      <div className="form-group">
+        <label htmlFor="bidStartingPrice">
+          Bid Starting Price
+        </label>
+
+        <div class="col-lg-10">
+          <input
+            type="text"
+            name="bid-starting-price"
+            placeholder="Bid starting price"
+            className="form-control"
+            onChange={props.handleBidStartingPrice}
+            required
+          />
+        </div>
+      </div>
+
+      {/* bid duration */}
+      <div className="form-group">
+        <label htmlFor="bidDuration" className="col-lg-2 control-label">
+          Bid Duration
+        </label>
+
+        <div className="col-lg-10">
+          <select
+            className="form-control"
+            id="bidDuration"
+            onChange={props.handleBidDurationChange}
+            required
+          >
+            <option value="1 week">1 Week</option>
+            <option value="1 Day">1 Day</option>
+            <option value="3 Days">3 Days</option>
+            <option value="2 weeks">2 Weeks</option>
+            <option value="4 weeks">4 Weeks</option>
+          </select>
+        </div>
+      </div>
+    </div>
+)}
+
+
+/**
  * list item form jsx
  */
 const ListItemForm = ({props}) => {
-  if (!props.userHasBankAccount || props.itemListed) { return null; }
+  if (!props.userHasBankAccount || props.itemListed) {
+    return null;
+  }
 
   return (
     <form
@@ -205,6 +256,8 @@ const ListItemForm = ({props}) => {
             </div>
           </div>
         </div>
+
+
 
         {/* delivery method (royal mail / free) */}
         <div className="form-group">

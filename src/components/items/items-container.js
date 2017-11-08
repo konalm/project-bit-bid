@@ -23,9 +23,25 @@ class ListedItems extends React.Component {
       searchQuery: 'default',
       category: 'default',
       imgCollection: [],
-      loginMessage: ''
+      loginMessage: '',
+      itemCount: '',
+      pageNo: 1,
+      limit: 10
     }
 
+    this.pageNo = 1;
+
+    this.updateListItems();
+    this.getItemsCount();
+  }
+
+  /****
+    handlers
+  ****/
+  handlePageNoChange = (event, pageNo) => {
+    event.preventDefault();
+
+    this.pageNo = pageNo;
     this.updateListItems();
   }
 
@@ -33,9 +49,26 @@ class ListedItems extends React.Component {
    * update list items
    */
   updateListItems = () => {
-    http.get(`items/category/${this.state.category}/search/${this.state.searchQuery}`)
-      .then(res => { this.setState({items: res.data}); })
-      .catch(err => { throw new Error(err); })
+    http.get(`items/category/${this.state.category}/search/${this.state.searchQuery}?limit=${this.state.limit}&pageno=${this.pageNo}`)
+      .then(res => {
+        this.setState({items: res.data});
+      })
+      .catch(err => {
+        throw new Error(err);
+      })
+  }
+
+  /**
+   * get items count (for pagination)
+   */
+  getItemsCount = () => {
+    http.get(`items-count/${this.state.category}/search/${this.state.searchQuery}`)
+      .then(res => {
+        this.setState({itemCount: res.data});
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
   }
 
   /**
@@ -84,6 +117,8 @@ class ListedItems extends React.Component {
         passCategoryToParent={this.selectCategoryCallback}
         goToPurchaseItem={this.goToPurchaseItem}
         loginMessage={this.state.loginMessage}
+        itemCount={this.state.itemCount}
+        handlePageNoChange={this.handlePageNoChange}
       />
   )}
 }
