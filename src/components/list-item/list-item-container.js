@@ -30,7 +30,10 @@ class ListItem extends React.Component {
       checkedForBankAccount: false,
       feedbackMessage: '',
       itemListed: false,
-      listedItemId: ''
+      listedItemId: '',
+
+      bidDuration: '1 week',
+      bidStartingPrice: 0
     }
 
     this.checkUserIsLoggedIn();
@@ -153,6 +156,9 @@ class ListItem extends React.Component {
       headers: { 'Authorization': cookies.get('bit_bid_key') }
     })
       .then(res => {
+        console.log('RES --->');
+        console.log(res);
+
         let itemId = res.data.data._id;
 
         this.setState({
@@ -165,6 +171,9 @@ class ListItem extends React.Component {
         })
       })
       .catch(err => {
+        console.log('ERR --->');
+        console.log(err);
+
         if (err.response.status === 403) {
           this.setState({feedbackMessage: err.response.data});
           return;
@@ -186,6 +195,8 @@ class ListItem extends React.Component {
       sellMethod: this.state.sellMethod,
       deliveryMethod: this.state.deliveryMethod,
       price: this.state.price,
+      bidStartingPrice: this.state.bidStartingPrice,
+      bidDuration: this.state.bidDuration,
       uploadedImagesLength: this.state.uploadedImages.length
     }
   }
@@ -221,6 +232,13 @@ class ListItem extends React.Component {
     .catch(err => { throw new Error(err); })
   }
 
+  /**
+   * convert days to seconds (used bid duration)
+   */
+  convertDaysToSeconds = (days) => {
+    return (60 * 60 * 24) * days
+  }
+
   render () {
     if (!this.state.loggedIn) { return null; }
 
@@ -236,12 +254,18 @@ class ListItem extends React.Component {
         handlePriceChange={this.handlePriceChange}
         handleBidStartingPrice={this.handleBidStartingPrice}
         handleBidDurationChange={this.handleBidDurationChange}
-        submitListItem={this.submitListItem}
+
         userHasBankAccount={this.state.userHasBankAccount}
         uploadedImages={this.state.uploadedImages}
         feedbackMessage={this.state.feedbackMessage}
         itemListed={this.state.itemListed}
         listedItemId={this.state.listedItemId}
+        sellMethod={this.state.sellMethod}
+
+        bidStartingPrice={this.state.bidStartingPrice}
+        bidDuration={this.state.bidDuration}
+
+        submitListItem={this.submitListItem}
       />
     )
   }

@@ -58,6 +58,29 @@ const ItemListedFeedback = ({props}) => {
 }
 
 /**
+ * list item for marketplace Sale
+ */
+const ListItemForSale = ({props}) => {
+  return (
+    <div className="form-group">
+      <label htmlFor="price" className="col-lg-2 control-label">
+        Price
+      </label>
+
+      <div className="col-lg-10">
+        <input
+          type="number"
+          name="price"
+          placeholder="price"
+          className="form-control"
+          onChange={props.handlePriceChange}
+          required
+        />
+      </div>
+    </div>
+)}
+
+/**
  * list item for bid
  */
 const ListItemForBid = ({props}) => {
@@ -65,17 +88,18 @@ const ListItemForBid = ({props}) => {
     <div>
       {/* bid starting price */}
       <div className="form-group">
-        <label htmlFor="bidStartingPrice">
+        <label htmlFor="bidStartingPrice" className="col-lg-2 control-label">
           Bid Starting Price
         </label>
 
-        <div class="col-lg-10">
+        <div className="col-lg-10">
           <input
             type="text"
             name="bid-starting-price"
             placeholder="Bid starting price"
             className="form-control"
             onChange={props.handleBidStartingPrice}
+            value={props.bidStartingPrice}
             required
           />
         </div>
@@ -94,17 +118,219 @@ const ListItemForBid = ({props}) => {
             onChange={props.handleBidDurationChange}
             required
           >
-            <option value="1 week">1 Week</option>
-            <option value="1 Day">1 Day</option>
-            <option value="3 Days">3 Days</option>
-            <option value="2 weeks">2 Weeks</option>
-            <option value="4 weeks">4 Weeks</option>
+            <option value="">Select Duration</option>
+            <option value="7">1 Week</option>
+            <option value="1">1 Day</option>
+            <option value="3">3 Days</option>
+            <option value="14">2 Weeks</option>
+            <option value="28">4 Weeks</option>
           </select>
         </div>
       </div>
     </div>
 )}
 
+/**
+ * descriptive title input
+ */
+const DescriptiveTitle = ({props}) => {
+  return (
+    <div className="form-group">
+      <label htmlFor="descritiveTitle" className="col-lg-2 control-label">
+        Descriptive Title
+      </label>
+
+      <div className="col-lg-10">
+        <input
+          type="text"
+          name="descriptive-title"
+          placeholder="descriptive title"
+          className="form-control"
+          onChange={props.handleTitleChange}
+          required
+        />
+      </div>
+    </div>
+)}
+
+/**
+ * image upload input
+ */
+const ImageUploadInput = ({props}) => {
+  return (
+    <div className="form-group">
+      <input
+        name="filesToUpload[]"
+        id="fileToUpload"
+        type="file"
+        className="form-control"
+        multiple
+        onChange={props.handleFileUpload}
+      />
+    </div>
+)}
+
+/**
+ * select category
+ */
+const SelectCategory = ({props}) => {
+  return (
+    <div className="form-group">
+      <label htmlFor="select" className="col-lg-2 control-label">
+        Select Category
+      </label>
+
+      <div className="col-lg-10">
+        <select
+          className="form-control"
+          id="select"
+          onChange={props.handleCategoryChange}
+          required
+        >
+          <option value="">Select Category</option>
+          <option value="sports">Sports</option>
+          <option value="beauty">Beauty</option>
+          <option value="fashion">Fashion</option>
+          <option value="electronics">Electronics</option>
+          <option value="clothes">Clothes</option>
+          <option value="baby">Baby</option>
+          <option value="beauty">Beauty</option>
+          <option value="books">Books</option>
+          <option value="car-motorbike">Cars And Motorbike</option>
+        </select>
+      </div>
+    </div>
+)}
+
+/**
+ * select condition option
+ */
+const SelectCondition =({props}) => {
+  return (
+    <div className="form-group">
+      <label htmlFor="select-condition" className="col-lg-2 control-label">
+        Select Condition
+      </label>
+
+      <div className="col-lg-10">
+        <select
+          className="form-control"
+          id="selectCondition"
+          onChange={props.handleConditionChange}
+          required
+        >
+          <option value="">Select Condition</option>
+          <option value="damaged">Damaged</option>
+          <option value="used">Used</option>
+          <option value="refurbished">Refurbished</option>
+          <option value="new-unopened">New and Unopened</option>
+          <option value="new-almost">Almost New</option>
+        </select>
+      </div>
+    </div>
+)}
+
+/**
+ * Item Description Input
+ */
+const ItemDescription = ({props}) => {
+  return (
+    <div className="form-group">
+      <label htmlFor="textArea" className="col-lg-2 control-label">
+        Item Description
+      </label>
+
+      <div className="col-lg-10">
+        <textarea
+          rows="8"
+          cols="50"
+          placeholder="describe your item in as much details as possible"
+          className="form-control"
+          id="textArea"
+          onChange={props.handleDescriptionChange}
+          required
+        >
+        </textarea>
+      </div>
+    </div>
+)}
+
+/**
+ * Select type of select method option
+ */
+const SelectSaleMethod = ({props}) => {
+  return (
+    <div className="form-group">
+      <label className="col-lg-2 control-label">Sell Type</label>
+      <div className="col-lg-10">
+        <div className="radio">
+          <label>
+            <input
+              type="radio"
+              name="sell-type"
+              value="2"
+              checked={props.sellMethod == 2}
+              onChange={props.handleSellMethodChange}
+            />
+
+            Auction
+          </label>
+        </div>
+
+        <div className="radio">
+          <label>
+            <input
+              type="radio"
+              name="sell-type"
+              value="1"
+              checked={props.sellMethod == 1}
+              onChange={props.handleSellMethodChange}
+            />
+
+            Buy Now
+          </label>
+        </div>
+      </div>
+    </div>
+)}
+
+/**
+ * select delivery method option
+ */
+const SelectDeliveryMethod = ({props}) => {
+  return (
+    <div className="form-group">
+      <label className="col-lg-2 control-label">Delivery Type</label>
+
+      <div className="col-lg-10">
+        <div className="radio">
+          <label>
+            <input
+              type="radio"
+              name="delivery-choice"
+              value="1"
+              onChange={props.handleDeliveryMethodChange}
+              checked="checked"
+            />
+            Royal Mail
+          </label>
+        </div>
+
+        <div className="radio">
+          <label>
+            <input
+              type="radio"
+              name="delivery-choice"
+              value="2"
+              onChange={props.handleDeliveryMethodChange}
+            />
+            Free
+          </label>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 /**
  * list item form jsx
@@ -120,35 +346,8 @@ const ListItemForm = ({props}) => {
       onSubmit={(event) => props.submitListItem(event)}
     >
       <fieldset>
-        {/* title */}
-        <div className="form-group">
-          <label htmlFor="descritiveTitle" className="col-lg-2 control-label">
-            Descriptive Title
-          </label>
-
-          <div className="col-lg-10">
-            <input
-              type="text"
-              name="descriptive-title"
-              placeholder="descriptive title"
-              className="form-control"
-              onChange={props.handleTitleChange}
-              required
-            />
-          </div>
-        </div>
-
-        {/* image upload */}
-        <div className="form-group">
-          <input
-            name="filesToUpload[]"
-            id="fileToUpload"
-            type="file"
-            className="form-control"
-            multiple
-            onChange={props.handleFileUpload}
-          />
-        </div>
+        <DescriptiveTitle props={props} />
+        <ImageUploadInput props={props} />
 
         <br /> <br />
 
@@ -156,157 +355,20 @@ const ListItemForm = ({props}) => {
           <PreviewImages props={props}/>
         </div>
 
-        {/* category */}
-        <div className="form-group">
-          <label htmlFor="select" className="col-lg-2 control-label">
-            Select Category
-          </label>
+        <SelectCategory props={props} />
+        <SelectCondition props={props} />
+        <ItemDescription props={props} />
+        <SelectSaleMethod props={props} />
 
-          <div className="col-lg-10">
-            <select
-              className="form-control"
-              id="select"
-              onChange={props.handleCategoryChange}
-              required
-            >
-              <option value="">Select Category</option>
-              <option value="sports">Sports</option>
-              <option value="beauty">Beauty</option>
-              <option value="fashion">Fashion</option>
-              <option value="electronics">Electronics</option>
-              <option value="clothes">Clothes</option>
-              <option value="baby">Baby</option>
-              <option value="beauty">Beauty</option>
-              <option value="books">Books</option>
-              <option value="car-motorbike">Cars And Motorbike</option>
-            </select>
-          </div>
-        </div>
+        { props.sellMethod == 1 &&
+          <ListItemForSale props={props} />
+        }
 
-        {/* condition */}
-        <div className="form-group">
-          <label htmlFor="select-condition" className="col-lg-2 control-label">
-            Select Condition
-          </label>
+        { props.sellMethod == 2 &&
+          <ListItemForBid props={props} />
+        }
 
-          <div className="col-lg-10">
-            <select
-              className="form-control"
-              id="selectCondition"
-              onChange={props.handleConditionChange}
-              required
-            >
-              <option value="">Select Condition</option>
-              <option value="damaged">Damaged</option>
-              <option value="used">Used</option>
-              <option value="refurbished">Refurbished</option>
-              <option value="new-unopened">New and Unopened</option>
-              <option value="new-almost">Almost New</option>
-            </select>
-          </div>
-        </div>
-
-        {/* item description */}
-        <div className="form-group">
-          <label htmlFor="textArea" className="col-lg-2 control-label">
-            Item Description
-          </label>
-
-          <div className="col-lg-10">
-            <textarea
-              rows="8"
-              cols="50"
-              placeholder="describe your item in as much details as possible"
-              className="form-control"
-              id="textArea"
-              onChange={props.handleDescriptionChange}
-              required
-            >
-            </textarea>
-          </div>
-        </div>
-
-        {/* sell type (auction / buy now)  */}
-        <div className="form-group">
-          <label className="col-lg-2 control-label">Sell Type</label>
-          <div className="col-lg-10">
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  name="sell-type"
-                  value="1"
-                  onChange={props.handleSellMethodChange}
-                  checked="checked"
-                />
-                Auction
-              </label>
-            </div>
-
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  name="sell-type"
-                  value="2"
-                  onChange={props.handleSellMethodChange}
-                />
-                Buy Now
-              </label>
-            </div>
-          </div>
-        </div>
-
-
-
-        {/* delivery method (royal mail / free) */}
-        <div className="form-group">
-          <label className="col-lg-2 control-label">Delivery Type</label>
-
-          <div className="col-lg-10">
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  name="delivery-choice"
-                  value="1"
-                  onChange={props.handleDeliveryMethodChange}
-                  checked="checked"
-                />
-                Royal Mail
-              </label>
-            </div>
-
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  name="delivery-choice"
-                  value="2"
-                  onChange={props.handleDeliveryMethodChange}
-                />
-                Free
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="price" className="col-lg-2 control-label">
-            Price
-          </label>
-
-          <div className="col-lg-10">
-            <input
-              type="number"
-              name="price"
-              placeholder="price"
-              className="form-control"
-              onChange={props.handlePriceChange}
-              required
-            />
-          </div>
-        </div>
+        <SelectDeliveryMethod props={props} />
 
         <div className="form-group">
           <div className="col-lg-10 col-lg-offset-2">
@@ -327,8 +389,7 @@ const ListItemForm = ({props}) => {
         </div>
       </fieldset>
     </form>
-  )
-}
+)}
 
 /**
  * List Item JSX
