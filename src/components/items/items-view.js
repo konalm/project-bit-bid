@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Header from '../reuse/header';
 import SidebarComponent from '../reuse/sidebar'
 
-import Item from './items-child.jsx'
+import Item from './items-child'
 import Pagination from './pagination'
 import LoginModal from '../reuse/login-modal'
 

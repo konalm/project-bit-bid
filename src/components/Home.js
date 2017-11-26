@@ -3,10 +3,6 @@ import Header from './reuse/header'
 
 
 class Home extends React.Component {
-  constructor () {
-    super();
-  }
-
   render () {
     return (
       <div>

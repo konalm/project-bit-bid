@@ -92,14 +92,28 @@ class Header extends React.Component {
 
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav">
+                {/* <li>
+                   <NavLink to="/items-listed" activeClassName="active">
+                     Listed Items
+                  </NavLink>
+                 </li> */}
+
                 <li>
-                  <NavLink to="/items-listed" activeClassName="active">
-                    Listed Items
+                  <NavLink to="/marketplace" activeClassName="active">
+                    Marketplace
+                    <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                   </NavLink>
                 </li>
 
-                <li onClick={this.goToListItem}>
-                  <a>List Item</a>
+                <li>
+                  <NavLink to="/auction" activeClassName="active">
+                    Auction
+                    <i className="fa fa-gavel" aria-hidden="true"></i>
+                  </NavLink>
+                </li>
+
+                <li onClick={(e) => this.goToListItem(e)}>
+                  <a href="#">List Item</a>
                 </li>
               </ul>
 
@@ -121,7 +135,7 @@ class Header extends React.Component {
 
               <ul className="nav navbar-nav navbar-right">
                 <li onClick={(event) => this.goToProfile(event)}>
-                  <a> Profile </a>
+                  <a href="#"> Profile </a>
                 </li>
               </ul>
             </div>

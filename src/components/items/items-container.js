@@ -31,8 +31,19 @@ class ListedItems extends React.Component {
 
     this.pageNo = 1;
 
+    this.listing = this.setListingType()
     this.updateListItems();
     this.getItemsCount();
+  }
+
+  componentWillMount() {
+    /* update items when url switch
+      (usually between auction and marketplace) */
+    this.props.history.listen(() => {
+      this.listing = this.setListingType()
+      this.updateListItems()
+      this.getItemsCount()
+    });
   }
 
   /****
@@ -45,12 +56,23 @@ class ListedItems extends React.Component {
     this.updateListItems();
   }
 
+  setListingType = () => {
+    if (window.location.pathname === '/auction') {
+      return 'auction'
+    }
+
+    return 'marketplace'
+  }
+
   /**
    * update list items
    */
   updateListItems = () => {
-    http.get(`items/category/${this.state.category}/search/${this.state.searchQuery}?limit=${this.state.limit}&pageno=${this.pageNo}`)
+    http.get(`items/category/${this.state.category}/search/${this.state.searchQuery}/listing/${this.listing}?limit=${this.state.limit}&pageno=${this.pageNo}`)
       .then(res => {
+        console.log('list items --->')
+        console.log(res)
+
         this.setState({items: res.data});
       })
       .catch(err => {
@@ -62,7 +84,7 @@ class ListedItems extends React.Component {
    * get items count (for pagination)
    */
   getItemsCount = () => {
-    http.get(`items-count/${this.state.category}/search/${this.state.searchQuery}`)
+    http.get(`items-count/${this.state.category}/search/${this.state.searchQuery}/listing/${this.listing}`)
       .then(res => {
         this.setState({itemCount: res.data});
       })
@@ -95,18 +117,18 @@ class ListedItems extends React.Component {
       this.state.searchQuery !== nextProps.searchQuery &&
       nextProps.searchQuery !== undefined
     ) {
-      this.setState({'searchQuery': nextProps.searchQuery});
+      this.setState({'searchQuery': nextProps.searchQuery})
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.category !== this.state.category) {
-      this.updateListItems();
+      this.updateListItems()
     }
 
     /* search query changed -> update list items */
     if (prevState.searchQuery !== this.state.searchQuery) {
-      this.updateListItems();
+      this.updateListItems()
     }
   }
 

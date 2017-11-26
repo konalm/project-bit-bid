@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom'
-import axios from 'axios';
 
 import requireAuth from '../../requireAuth'
 import {http} from '../../http-requests';

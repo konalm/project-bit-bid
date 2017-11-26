@@ -77,6 +77,7 @@ class Sidebar extends React.Component {
         <li
           onClick={(e) => this.selectCategory(e, category)}
           className={category.key === this.state.currentCategory ? 'active' : ''}
+          key={category.key}
           >
           <a href="#">{category.value}</a>
         </li>

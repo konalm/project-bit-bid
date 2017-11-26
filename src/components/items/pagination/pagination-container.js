@@ -15,7 +15,7 @@ class Pagination extends React.Component {
     for (pageNo = 1; pageNo <= pageCount; pageNo ++) {
       const x = pageNo;
       pageNos.push(
-        <li>
+        <li key={pageNo}>
           <a
             onClick={ (event) => this.props.handlePageNoChange(event, x) }
             href="#"

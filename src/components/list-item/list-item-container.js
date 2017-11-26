@@ -218,8 +218,6 @@ class ListItem extends React.Component {
    */
   checkUserHasBankAccount = () => {
     http.get('bank-accounts').then(res => {
-
-
       if (res.data.data.length === 0) {
         $('#noBankAccountModal').modal('show');
       }

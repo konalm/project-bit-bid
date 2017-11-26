@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Redirect, Switch, withRouter}
+import {BrowserRouter as Router, Route, Redirect, Switch}
   from 'react-router-dom';
 
 import $ from 'jquery';
@@ -42,8 +42,10 @@ const App = () => (
   <Router>
     <div>
     <Switch>
-      <Redirect exact from="/" to="items-listed" component={home} />
+      <Redirect exact from="/" to="/marketplace" component={home} />
       {/* items */}
+      <Route path="/marketplace" component={items} />
+      <Route path="/auction" component={items} />
       <Route path="/items-listed" component={items} />
       <Route path="/items/:itemId" component={item} />
       <Route path="/list-item" component={listItem} />

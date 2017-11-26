@@ -33,6 +33,7 @@ class Item extends React.Component {
           <div className="col-lg-6">
             <img
               src={`http://localhost:8080/api/render-item-img/${item.user._id}/item/${item._id}/img-path/${img}`}
+              alt="item image"
               width="300px"
             />
           </div>
